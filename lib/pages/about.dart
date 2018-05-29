@@ -33,7 +33,7 @@ class About extends StatelessWidget {
   }
 
   launchUrl() async {
-    const url = "http://www.google.com/";
+    const url = "https://github.com/amangautam1/flutter-musicplayer";
     if (await canLaunch(url)) {
       await launch(url);
     } else {
