@@ -27,49 +27,49 @@ This app exploits Sqlite databse that enables faster loading of songs at startup
       Now playing
     </td>
     <td>
-      <img src="demo/home1.png" height=350 width=250>
+      <img src="demo/home1.png" height=400 width=250>
       Home Screen
       </td>
       <td>
-      <img src="demo/home2.png" height=350 width=250>
+      <img src="demo/home2.png" height=400 width=250>
       Home Screen
       </td>
     </tr>
   <tr>
       <td>
-      <img src="demo/album.png" height=350 width=250>
+      <img src="demo/album.png" height=400 width=250>
       Album
       </td>
     <td>
-      <img src="demo/artist.png" height=350 width=250>
+      <img src="demo/artist.png" height=400 width=250>
       Artist
       </td>
       <td>
-      <img src="demo/songs.png" height=350 width=250>
+      <img src="demo/songs.png" height=400 width=250>
       Songs
       </td>
     </tr>
   <tr>
       <td>
-      <img src="demo/playlist.png" height=350 width=250>
+      <img src="demo/playlist.png" height=400 width=250>
      PlayList
       </td>
       <td>
-      <img src="demo/queue.png" height=350 width=250>
+      <img src="demo/queue.png" height=400 width=250>
       Queue
       </td>
       <td>
-      <img src="demo/fav.png" height=350 width=250>
+      <img src="demo/fav.png" height=400 width=250>
       Favourites
     </td>
     </tr>
   <tr>
       <td>
-      <img src="demo/recent.png" height=350 width=250>
+      <img src="demo/recent.png" height=400 width=250>
       Recently played
       </td>
       <td>
-      <img src="demo/top.png" height=350 width=250>
+      <img src="demo/top.png" height=400 width=250>
       Top tracks
       </td>
   </tr>
