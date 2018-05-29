@@ -23,20 +23,52 @@ This app exploits Sqlite databse that enables faster loading of songs at startup
 <table>
   <tr>
     <td>
-      <img src="demo/nowplaying.png" height=300 width=200/>
+      <img src="demo/nowplaying.png" height=350 width=200/>
       Now playing
     </td>
     <td>
-      <img src="demo/home1.png" height=300 width=200>
+      <img src="demo/home1.png" height=350 width=200>
       Home Screen
       </td>
       <td>
-      <img src="demo/home2.png" height=300 width=200>
+      <img src="demo/home2.png" height=350 width=200>
       Home Screen
       </td>
       <td>
-      <img src="demo/album.png" height=300 width=200>
+      <img src="demo/album.png" height=350 width=200>
       Home Screen
+      </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="demo/artist.png" height=300 width=200>
+      Artist
+      </td>
+      <td>
+      <img src="demo/songs.png" height=300 width=200>
+      Songs
+      </td>
+      <td>
+      <img src="demo/playlist.png" height=300 width=200>
+     PlayList
+      </td>
+      <td>
+      <img src="demo/queue.png" height=300 width=200>
+      Queue
+      </td>
+  </tr>
+  <tr>
+      <td>
+      <img src="demo/fav.png" height=300 width=200>
+      Favourites
+    </td>
+      <td>
+      <img src="demo/recent.png" height=300 width=200>
+      Recently played
+      </td>
+      <td>
+      <img src="demo/top.png" height=300 width=200>
+      Top tracks
       </td>
   </tr>
   </table>
