@@ -1,4 +1,4 @@
-# flutter-musicplayer
+# Flutter Music Player
 
 A complete and open source music player designed in flutter. It is first complete music player designed in flutter.
 This app exploits Sqlite databse that enables faster loading of songs at startup. Only one time setup for loading songs is needed.
@@ -18,8 +18,22 @@ This app exploits Sqlite databse that enables faster loading of songs at startup
 <li> Play/pause
 <li> Next/prev
 <li> Song queue
+  
+# Screenshots
+<table>
+  <tr>
+    <td>
+      <img src="demo/nowplaying.jpg" height=300 width=200/>
+      Now playing
+    </td>
+    <td>
+      <img src="" height=300 width=200>
+      Home Screen
+      </td>
+  </tr>
+  </table>
 
-
+# Plugins
 Music player plugin used : <a href="https://github.com/iampawan/Flute-Music-Player">Flute-music</a>
 <br>
 For Sqlite :<a href="https://github.com/tekartik/sqflite">SQLite flutter plugin</a>
