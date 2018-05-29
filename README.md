@@ -10,6 +10,7 @@ You can download and test app <a href="https://drive.google.com/open?id=1-n1lT14
 <li> Beautiful Home screen
 <li> Beautiful Now Playing
 <li> Sqlite database support
+<li> Songs suggestions
 <li> Top tracks
 <li> Recent songs
 <li> Random song
@@ -18,6 +19,7 @@ You can download and test app <a href="https://drive.google.com/open?id=1-n1lT14
 <li> Playlist
 <li> Add to favourite
 <li> Shuffle
+<li> Queue
 <li> Play/pause
 <li> Next/prev
 <li> Song queue
