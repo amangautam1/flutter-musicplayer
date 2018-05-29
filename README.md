@@ -34,12 +34,12 @@ This app exploits Sqlite databse that enables faster loading of songs at startup
       <img src="demo/home2.png" height=350 width=200>
       Home Screen
       </td>
+    </tr>
+  <tr>
       <td>
       <img src="demo/album.png" height=350 width=200>
       Album
       </td>
-  </tr>
-  <tr>
     <td>
       <img src="demo/artist.png" height=350 width=200>
       Artist
@@ -48,6 +48,8 @@ This app exploits Sqlite databse that enables faster loading of songs at startup
       <img src="demo/songs.png" height=350 width=200>
       Songs
       </td>
+    </tr>
+  <tr>
       <td>
       <img src="demo/playlist.png" height=350 width=200>
      PlayList
@@ -62,6 +64,8 @@ This app exploits Sqlite databse that enables faster loading of songs at startup
       <img src="demo/fav.png" height=350 width=200>
       Favourites
     </td>
+    </tr>
+  <tr>
       <td>
       <img src="demo/recent.png" height=350 width=200>
       Recently played
