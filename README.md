@@ -23,11 +23,19 @@ This app exploits Sqlite databse that enables faster loading of songs at startup
 <table>
   <tr>
     <td>
-      <img src="demo/nowplaying.jpg" height=300 width=200/>
+      <img src="demo/nowplaying.png" height=300 width=200/>
       Now playing
     </td>
     <td>
-      <img src="" height=300 width=200>
+      <img src="demo/home1.png" height=300 width=200>
+      Home Screen
+      </td>
+      <td>
+      <img src="demo/home2.png" height=300 width=200>
+      Home Screen
+      </td>
+      <td>
+      <img src="demo/album.png" height=300 width=200>
       Home Screen
       </td>
   </tr>
