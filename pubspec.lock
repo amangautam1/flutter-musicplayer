@@ -172,6 +172,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0-alpha.9"
+  local_notifications:
+    dependency: "direct main"
+    description:
+      name: local_notifications
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   logging:
     dependency: transitive
     description:

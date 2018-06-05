@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:musicplayer/database/database_client.dart';
 import 'package:musicplayer/util/lastplay.dart';
+import 'package:local_notifications/local_notifications.dart';
 
 class NowPlaying extends StatefulWidget {
   int mode;
@@ -38,6 +39,7 @@ class _stateNowPlaying extends State<NowPlaying> {
   void initPlayer() async {
     if (player == null) {
       player = MusicFinder();
+      LastPlay.player=player;
     }
     //  int i= await widget.db.isfav(song);
     setState(() {
@@ -70,6 +72,47 @@ class _stateNowPlaying extends State<NowPlaying> {
       });
     });
   }
+/*
+  void buildNotif() async{
+    handleCustomActionClick(String payload) {
+      if(payload == "secondAction") {
+        _playpause();
+      }
+    }
+    onNotificationClick(String payload) async{
+      await Navigator.push(
+        context,
+        new MaterialPageRoute(builder: (context) => new NowPlaying(widget.db, LastPlay.songs, LastPlay.index, 1)),
+      );
+    }
+
+    int id = await LocalNotifications.createNotification(
+        title: "Multiple Actions",
+        content: 'With custom callbacks',
+        id: 0,
+        onNotificationClick: new NotificationAction(
+            actionText: "Some action",
+            callback:onNotificationClick,
+            payload: "Some payload",
+            launchesApp: false
+        ),
+        actions: [
+          new NotificationAction(
+              actionText: "playpause",
+              callback: handleCustomActionClick,
+              payload: "firstAction",
+              launchesApp: true
+          ),
+          new NotificationAction(
+              actionText: "Second",
+              callback: handleCustomActionClick,
+              payload: "secondAction",
+              launchesApp: false
+          )
+        ]
+    );
+  }
+  */
 
   void updatePage(int index) {
     LastPlay.index = index;
@@ -83,7 +126,9 @@ class _stateNowPlaying extends State<NowPlaying> {
     widget.db.updateSong(song);
     isfav = song.isFav;
     player.play(song.uri);
+//    buildNotif();
     isPlaying = true;
+
   }
 
   void _playpause() {

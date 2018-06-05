@@ -13,6 +13,7 @@ dependencies:
   path_provider:
   material_search: ^0.2.7
   url_launcher: 3.0.1
+  local_notifications: 0.0.6
 
 
 dev_dependencies:

@@ -120,7 +120,8 @@ class _musicState extends State<MusicHome> {
             backgroundColor: Theme.of(context).primaryColor),
       );
     }
-    return new Scaffold(
+    return new WillPopScope(
+      child:new Scaffold(
       appBar: _selectedDrawerIndex == 0
           ? null
           : new AppBar(
@@ -177,10 +178,34 @@ class _musicState extends State<MusicHome> {
         onTap: (index) => _onSelectItem(index),
         currentIndex: _selectedDrawerIndex,
       ),
+    ),
+      onWillPop: _onWillPop,
     );
   }
-}
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      child: new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('music player will be stopped..'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () {
+              LastPlay.player.stop();
+              Navigator.of(context).pop(true);
+            },
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    ) ?? false;
+  }
 
+}
 class BottomItem {
   String title;
   IconData icon;
