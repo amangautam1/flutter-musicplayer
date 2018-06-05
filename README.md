@@ -1,12 +1,17 @@
-# flutter-musicplayer
+# Flutter Music Player
 
 A complete and open source music player designed in flutter. It is first complete music player designed in flutter.
-This app exploits Sqlite databse that enables faster loading of songs at startup. Only one time setup for loading songs is needed.
+This app exploits Sqlite databse that enables faster loading of songs at startup. Only one time setup for loading songs is needed. This app comes with a lot of features and a more are coming soon.
+<br>
+<br>
+You can download and test app <a href="https://drive.google.com/open?id=1-n1lT14FUtXoa5KUKgbkrrYE5VyRO3KB">Music Player</a> from google drive.
 # Features
 <li> Play local songs
 <li> Beautiful Home screen
 <li> Beautiful Now Playing
 <li> Sqlite database support
+<li> Search songs
+<li> Songs suggestions
 <li> Top tracks
 <li> Recent songs
 <li> Random song
@@ -15,11 +20,68 @@ This app exploits Sqlite databse that enables faster loading of songs at startup
 <li> Playlist
 <li> Add to favourite
 <li> Shuffle
+<li> Queue
 <li> Play/pause
 <li> Next/prev
 <li> Song queue
+  
+# Screenshots
+<table>
+  <tr>
+    <td>
+      <img src="demo/nowplaying.png" height=400 width=250/>
+      Now playing
+    </td>
+    <td>
+      <img src="demo/home1.png" height=400 width=250>
+      Home Screen
+      </td>
+      <td>
+      <img src="demo/home2.png" height=400 width=250>
+      Home Screen
+      </td>
+    </tr>
+  <tr>
+      <td>
+      <img src="demo/album.png" height=400 width=250>
+      Album
+      </td>
+    <td>
+      <img src="demo/artist.png" height=400 width=250>
+      Artist
+      </td>
+      <td>
+      <img src="demo/songs.png" height=400 width=250>
+      Songs
+      </td>
+    </tr>
+  <tr>
+      <td>
+      <img src="demo/playlist.png" height=400 width=250>
+     PlayList
+      </td>
+      <td>
+      <img src="demo/queue.png" height=400 width=250>
+      Queue
+      </td>
+      <td>
+      <img src="demo/fav.png" height=400 width=250>
+      Favourites
+    </td>
+    </tr>
+  <tr>
+      <td>
+      <img src="demo/recent.png" height=400 width=250>
+      Recently played
+      </td>
+      <td>
+      <img src="demo/top.png" height=400 width=250>
+      Top tracks
+      </td>
+  </tr>
+  </table>
 
-
+# Plugins
 Music player plugin used : <a href="https://github.com/iampawan/Flute-Music-Player">Flute-music</a>
 <br>
 For Sqlite :<a href="https://github.com/tekartik/sqflite">SQLite flutter plugin</a>
