@@ -351,14 +351,8 @@ class _stateNowPlaying extends State<NowPlaying> {
                           onTap: () {
                             setState(() {
                               LastPlay.index = i;
-                              updatePage(LastPlay.index);
-                              /*  song = widget.songs[i];
-                              song.timestamp =
-                                  new DateTime.now().millisecondsSinceEpoch;
-                              widget.db.updateSong(song);
                               player.stop();
-                              player.play(song.uri);
-                              isPlaying = true;*/
+                              updatePage(LastPlay.index);
                               Navigator.pop(context);
                             });
                           },
