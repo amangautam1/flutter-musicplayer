@@ -79,7 +79,7 @@ You can download appp from releases <a href="https://github.com/amangautam1/flut
       Top tracks
       </td>
     <td>
-      <img src="demo/landscape.png" height=400 width=250>
+      <img src="demo/landscape.png" height=250 width=400>
       Landscape mode
     </td>
   </tr>
