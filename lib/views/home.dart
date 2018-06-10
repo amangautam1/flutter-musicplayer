@@ -50,6 +50,7 @@ class stateHome extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final Orientation orientation=MediaQuery.of(context).orientation;
     return new CustomScrollView(
       slivers: <Widget>[
         new SliverAppBar(
@@ -117,7 +118,7 @@ class stateHome extends State<Home> {
                             onPressed: () {
                               Navigator.of(context).push(
                                   new MaterialPageRoute(builder: (context) {
-                                return new ListSongs(widget.db, 1);
+                                return new ListSongs(widget.db, 1,orientation);
                               }));
                             },
                             child: new Icon(Icons.history),
@@ -135,7 +136,7 @@ class stateHome extends State<Home> {
                             onPressed: () {
                               Navigator.of(context).push(
                                   new MaterialPageRoute(builder: (context) {
-                                return new ListSongs(widget.db, 2);
+                                return new ListSongs(widget.db, 2,orientation);
                               }));
                             },
                             child: new Icon(Icons.show_chart),

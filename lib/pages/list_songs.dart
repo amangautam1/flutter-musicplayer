@@ -9,8 +9,9 @@ import 'package:musicplayer/util/lastplay.dart';
 class ListSongs extends StatefulWidget {
   DatabaseClient db;
   int mode;
-  // mode ==1//recent 2//top 3//fav
-  ListSongs(this.db, this.mode);
+  Orientation orientation;
+  // mode =1=>recent, 2=>top, 3=>fav
+  ListSongs(this.db, this.mode,this.orientation);
   @override
   State<StatefulWidget> createState() {
     return new _listSong();
@@ -47,7 +48,6 @@ class _listSong extends State<ListSongs> {
       default:
         break;
     }
-
     setState(() {
       isLoading = false;
     });
@@ -67,16 +67,17 @@ class _listSong extends State<ListSongs> {
       default:
         return;
     }
-    ;
   }
 
   @override
   Widget build(BuildContext context) {
+    initSongs();
     return new Scaffold(
-        appBar: new AppBar(
+        appBar: widget.orientation==Orientation.portrait?new AppBar(
           title: getTitle(widget.mode),
-        ),
-        body: new Container(
+        ):null,
+        body
+            : new Container(
           child: isLoading
               ? new Center(
                   child: new CircularProgressIndicator(),

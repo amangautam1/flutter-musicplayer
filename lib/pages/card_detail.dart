@@ -53,114 +53,115 @@ class stateCardDetail extends State<CardDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final Orientation orientation=MediaQuery.of(context).orientation;
     return new Scaffold(
-      body: isLoading
-          ? new Center(
-              child: new CircularProgressIndicator(),
-            )
-          : CustomScrollView(
-              slivers: <Widget>[
-                new SliverAppBar(
-                  expandedHeight: 350.0,
-                  floating: false,
-                  pinned: true,
-                  flexibleSpace: new FlexibleSpaceBar(
-                    title: widget.mode == 0
-                        ? new Text(
-                            widget.song.album,
-                          )
-                        : new Text(widget.song.artist),
-                    background: new Stack(
-                      fit: StackFit.expand,
-                      children: <Widget>[
-                        image != null
-                            ? new Image.file(
-                                image,
-                                fit: BoxFit.cover,
-                              )
-                            : new Image.asset("images/back.jpg",
-                                fit: BoxFit.cover),
-                      ],
-                    ),
+        body: isLoading
+            ? new Center(
+          child: new CircularProgressIndicator(),
+        )
+            :new CustomScrollView(
+          slivers: <Widget>[
+            new SliverAppBar(
+              expandedHeight: orientation==Orientation.portrait?350.0:200.0,
+              floating: false,
+              pinned: true,
+              flexibleSpace: new FlexibleSpaceBar(
+                title: widget.mode == 0
+                    ? new Text(
+                  widget.song.album,
+                )
+                    : new Text(widget.song.artist),
+                background: new Stack(
+                  fit: StackFit.expand,
+                  children: <Widget>[
+                    image != null
+                        ? new Image.file(
+                      image,
+                      fit: BoxFit.cover,
+                    )
+                        : new Image.asset("images/back.jpg",
+                        fit: BoxFit.cover),
+                  ],
+                ),
+              ),
+            ),
+            new SliverList(
+              delegate: new SliverChildListDelegate(<Widget>[
+                new Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: new Text(
+                    widget.song.album,
+                    style: new TextStyle(
+                        fontSize: 30.0, fontWeight: FontWeight.bold),
+                    maxLines: 1,
                   ),
                 ),
-                new SliverList(
-                  delegate: new SliverChildListDelegate(<Widget>[
-                    new Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: new Text(
-                        widget.song.album,
+                new Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: new Text(
+                    widget.song.artist,
+                    style: new TextStyle(fontSize: 14.0),
+                    maxLines: 1,
+                  ),
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8.0, top: 10.0, bottom: 10.0),
+                  child: new Text(songs.length.toString() + " songs"),
+                ),
+                new Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: new Text("Songs",
                         style: new TextStyle(
-                            fontSize: 30.0, fontWeight: FontWeight.bold),
-                        maxLines: 1,
-                      ),
-                    ),
-                    new Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: new Text(
-                        widget.song.artist,
-                        style: new TextStyle(fontSize: 14.0),
-                        maxLines: 1,
-                      ),
-                    ),
-                    new Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8.0, top: 10.0, bottom: 10.0),
-                      child: new Text(songs.length.toString() + " songs"),
-                    ),
-                    new Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: new Text("Songs",
-                            style: new TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                            ))),
-                  ]),
-                ),
-                new SliverList(
-                  delegate: new SliverChildBuilderDelegate((builder, i) {
-                    return new ListTile(
-                      leading: new CircleAvatar(
-                        child: getImage(songs[i]) != null
-                            ? new Image.file(
-                                getImage(songs[i]),
-                                height: 120.0,
-                                fit: BoxFit.cover,
-                              )
-                            : new Text(songs[i].title[0].toUpperCase()),
-                      ),
-                      title: new Text(songs[i].title,
-                          maxLines: 1, style: new TextStyle(fontSize: 18.0)),
-                      subtitle: new Text(
-                        songs[i].artist,
-                        maxLines: 1,
-                        style:
-                            new TextStyle(fontSize: 12.0, color: Colors.grey),
-                      ),
-                      trailing: new Text(
-                          new Duration(milliseconds: songs[i].duration)
-                              .toString()
-                              .split('.')
-                              .first,
-                          style: new TextStyle(
-                              fontSize: 12.0, color: Colors.grey)),
-                      onTap: () {
-                        LastPlay.songs = songs;
-                        Navigator.of(context).push(new MaterialPageRoute(
-                            builder: (context) =>
-                                new NowPlaying(widget.db, songs, i, 0)));
-                      },
-                    );
-                  }, childCount: songs.length),
-                ),
-              ],
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ))),
+              ]),
             ),
+            new SliverList(
+              delegate: new SliverChildBuilderDelegate((builder, i) {
+                return new ListTile(
+                  leading: new CircleAvatar(
+                    child: getImage(songs[i]) != null
+                        ? new Image.file(
+                      getImage(songs[i]),
+                      height: 120.0,
+                      fit: BoxFit.cover,
+                    )
+                        : new Text(songs[i].title[0].toUpperCase()),
+                  ),
+                  title: new Text(songs[i].title,
+                      maxLines: 1, style: new TextStyle(fontSize: 18.0)),
+                  subtitle: new Text(
+                    songs[i].artist,
+                    maxLines: 1,
+                    style:
+                    new TextStyle(fontSize: 12.0, color: Colors.grey),
+                  ),
+                  trailing: new Text(
+                      new Duration(milliseconds: songs[i].duration)
+                          .toString()
+                          .split('.')
+                          .first,
+                      style: new TextStyle(
+                          fontSize: 12.0, color: Colors.grey)),
+                  onTap: () {
+                    LastPlay.songs = songs;
+                    Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (context) =>
+                        new NowPlaying(widget.db, songs, i, 0)));
+                  },
+                );
+              }, childCount: songs.length),
+            ),
+          ],
+        ),
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
           LastPlay.songs = songs;
           Navigator.of(context).push(new MaterialPageRoute(
               builder: (context) =>
-                  new NowPlaying(widget.db, LastPlay.songs, 0, 0)));
+              new NowPlaying(widget.db, LastPlay.songs, 0, 0)));
         },
         child: new Icon(Icons.shuffle),
       ),

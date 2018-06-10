@@ -27,12 +27,13 @@ class _stateNowPlaying extends State<NowPlaying> {
   bool isPlaying = false;
   Song song;
   int isfav = 1;
+  Orientation orientation;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  //  SystemChrome.setPreferredOrientations(
+    //    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     initPlayer();
   }
 
@@ -72,47 +73,7 @@ class _stateNowPlaying extends State<NowPlaying> {
       });
     });
   }
-/*
-  void buildNotif() async{
-    handleCustomActionClick(String payload) {
-      if(payload == "secondAction") {
-        _playpause();
-      }
-    }
-    onNotificationClick(String payload) async{
-      await Navigator.push(
-        context,
-        new MaterialPageRoute(builder: (context) => new NowPlaying(widget.db, LastPlay.songs, LastPlay.index, 1)),
-      );
-    }
 
-    int id = await LocalNotifications.createNotification(
-        title: "Multiple Actions",
-        content: 'With custom callbacks',
-        id: 0,
-        onNotificationClick: new NotificationAction(
-            actionText: "Some action",
-            callback:onNotificationClick,
-            payload: "Some payload",
-            launchesApp: false
-        ),
-        actions: [
-          new NotificationAction(
-              actionText: "playpause",
-              callback: handleCustomActionClick,
-              payload: "firstAction",
-              launchesApp: true
-          ),
-          new NotificationAction(
-              actionText: "Second",
-              callback: handleCustomActionClick,
-              payload: "secondAction",
-              launchesApp: false
-          )
-        ]
-    );
-  }
-  */
 
   void updatePage(int index) {
     LastPlay.index = index;
@@ -126,7 +87,6 @@ class _stateNowPlaying extends State<NowPlaying> {
     widget.db.updateSong(song);
     isfav = song.isFav;
     player.play(song.uri);
-//    buildNotif();
     isPlaying = true;
 
   }
@@ -186,124 +146,10 @@ class _stateNowPlaying extends State<NowPlaying> {
 
   @override
   Widget build(BuildContext context) {
+    orientation=MediaQuery.of(context).orientation;
     return new Scaffold(
       key: scaffoldState,
-      body: new Container(
-        // color: Colors.transparent,
-        child: new Column(
-          children: <Widget>[
-            new AspectRatio(
-              aspectRatio: 15 / 15,
-              child: getImage(song) != null
-                  ? new Image.file(
-                      getImage(song),
-                      fit: BoxFit.cover,
-                    )
-                  : new Image.asset(
-                      "images/back.jpg",
-                      fit: BoxFit.fitHeight,
-                    ),
-            ),
-            new Slider(
-              min: 0.0,
-              value: position?.inMilliseconds?.toDouble() ?? 0.0,
-              onChanged: (double value) =>
-                  player.seek((value / 1000).roundToDouble()),
-              max: song.duration.toDouble() + 1000,
-            ),
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                new Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: new Text(position.toString().split('.').first),
-                ),
-                new Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: new Text(
-                    new Duration(milliseconds: song.duration)
-                        .toString()
-                        .split('.')
-                        .first,
-                  ),
-                ),
-              ],
-            ),
-            new Expanded(
-              child: new Center(
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    new Text(
-                      song.title,
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: new TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    new Text(
-                      song.artist,
-                      maxLines: 1,
-                      style: new TextStyle(fontSize: 14.0, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            new Expanded(
-              child: new Center(
-                child: new Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    new IconButton(
-                      icon: new Icon(Icons.skip_previous, size: 40.0),
-                      onPressed: prev,
-                    ),
-                    new Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0)),
-                    new FloatingActionButton(
-                        child: !isPlaying
-                            ? new Icon(Icons.play_arrow)
-                            : new Icon(Icons.pause),
-                        onPressed: _playpause),
-                    new Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0)),
-                    new IconButton(
-                      icon: new Icon(Icons.skip_next, size: 40.0),
-                      onPressed: next,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                new IconButton(
-                    icon: new Icon(Icons.shuffle),
-                    onPressed: () {
-                      widget.songs.shuffle();
-                      scaffoldState.currentState.showSnackBar(
-                          new SnackBar(content: new Text("List Suffled")));
-                    }),
-                new IconButton(
-                    icon: new Icon(Icons.queue_music),
-                    onPressed: _showBottomSheet),
-                new IconButton(
-                    icon: isfav == 0
-                        ? new Icon(Icons.favorite_border)
-                        : new Icon(
-                            Icons.favorite,
-                            color: Colors.red,
-                          ),
-                    onPressed: () {
-                      setFav(song);
-                    })
-              ],
-            )
-          ],
-        ),
-      ),
+      body: orientation==Orientation.portrait?potrait():landscape()
     );
   }
 
@@ -363,6 +209,250 @@ class _stateNowPlaying extends State<NowPlaying> {
         });
   }
 
+  Widget potrait(){
+    return new Container(
+      // color: Colors.transparent,
+      child: new Column(
+        children: <Widget>[
+          new AspectRatio(
+            aspectRatio: 15 / 15,
+            child: getImage(song) != null
+                ? new Image.file(
+              getImage(song),
+              fit: BoxFit.cover,
+            )
+                : new Image.asset(
+              "images/back.jpg",
+              fit: BoxFit.fitHeight,
+            ),
+          ),
+          new Slider(
+            min: 0.0,
+            value: position?.inMilliseconds?.toDouble() ?? 0.0,
+            onChanged: (double value) =>
+                player.seek((value / 1000).roundToDouble()),
+            max: song.duration.toDouble() + 1000,
+          ),
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              new Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: new Text(position.toString().split('.').first),
+              ),
+              new Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: new Text(
+                  new Duration(milliseconds: song.duration)
+                      .toString()
+                      .split('.')
+                      .first,
+                ),
+              ),
+            ],
+          ),
+          new Expanded(
+            child: new Center(
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Text(
+                    song.title,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: new TextStyle(
+                        fontSize: 20.0, fontWeight: FontWeight.bold),
+                  ),
+                  new Text(
+                    song.artist,
+                    maxLines: 1,
+                    style: new TextStyle(fontSize: 14.0, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          new Expanded(
+            child: new Center(
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new IconButton(
+                    icon: new Icon(Icons.skip_previous, size: 40.0),
+                    onPressed: prev,
+                  ),
+                  new Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0)),
+                  new FloatingActionButton(
+                      child: !isPlaying
+                          ? new Icon(Icons.play_arrow)
+                          : new Icon(Icons.pause),
+                      onPressed: _playpause),
+                  new Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0)),
+                  new IconButton(
+                    icon: new Icon(Icons.skip_next, size: 40.0),
+                    onPressed: next,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              new IconButton(
+                  icon: new Icon(Icons.shuffle),
+                  onPressed: () {
+                    widget.songs.shuffle();
+                    scaffoldState.currentState.showSnackBar(
+                        new SnackBar(content: new Text("List Suffled")));
+                  }),
+              new IconButton(
+                  icon: new Icon(Icons.queue_music),
+                  onPressed: _showBottomSheet),
+              new IconButton(
+                  icon: isfav == 0
+                      ? new Icon(Icons.favorite_border)
+                      : new Icon(
+                    Icons.favorite,
+                    color: Colors.red,
+                  ),
+                  onPressed: () {
+                    setFav(song);
+                  })
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget landscape(){
+    return new Row(
+      children: <Widget>[
+        new Container(
+          width:350.0,
+            child:  new AspectRatio(
+          aspectRatio: 15 / 19,
+          child: getImage(song) != null
+              ? new Image.file(
+            getImage(song),
+            fit: BoxFit.cover,
+          )
+              : new Image.asset(
+            "images/back.jpg",
+            fit: BoxFit.fitHeight,
+          ),
+        ),
+        ),
+        new Expanded(
+          child: new Column(
+            children: <Widget>[
+
+              new Expanded(
+                child: new Center(
+                  child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new Text(
+                        song.title,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: new TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.bold),
+                      ),
+                      new Text(
+                        song.artist,
+                        maxLines: 1,
+                        style: new TextStyle(fontSize: 14.0, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              new Slider(
+                min: 0.0,
+                value: position?.inMilliseconds?.toDouble() ?? 0.0,
+                onChanged: (double value) =>
+                    player.seek((value / 1000).roundToDouble()),
+                max: song.duration.toDouble() + 1000,
+              ),
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  new Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: new Text(position.toString().split('.').first),
+                  ),
+                  new Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: new Text(
+                      new Duration(milliseconds: song.duration)
+                          .toString()
+                          .split('.')
+                          .first,
+                    ),
+                  ),
+                ],
+              ),
+              new Expanded(
+                child: new Center(
+                  child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new IconButton(
+                        icon: new Icon(Icons.skip_previous, size: 40.0),
+                        onPressed: prev,
+                      ),
+                      new Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0)),
+                      new FloatingActionButton(
+                          child: !isPlaying
+                              ? new Icon(Icons.play_arrow)
+                              : new Icon(Icons.pause),
+                          onPressed: _playpause),
+                      new Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0)),
+                      new IconButton(
+                        icon: new Icon(Icons.skip_next, size: 40.0),
+                        onPressed: next,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  new IconButton(
+                      icon: new Icon(Icons.shuffle),
+                      onPressed: () {
+                        widget.songs.shuffle();
+                        scaffoldState.currentState.showSnackBar(
+                            new SnackBar(content: new Text("List Suffled")));
+                      }),
+                  new IconButton(
+                      icon: new Icon(Icons.queue_music),
+                      onPressed: _showBottomSheet),
+                  new IconButton(
+                      icon: isfav == 0
+                          ? new Icon(Icons.favorite_border)
+                          : new Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      ),
+                      onPressed: () {
+                        setFav(song);
+                      })
+                ],
+              )
+            ],
+          ),
+        )
+      ],
+    );
+  }
   Future<void> setFav(song) async {
     int i = await widget.db.favSong(song);
     setState(() {

@@ -71,11 +71,12 @@ class _stateArtist extends State<Artists> {
 
   @override
   Widget build(BuildContext context) {
+    final Orientation orientation=MediaQuery.of(context).orientation;
     return new Container(
         child: isLoading
             ? new Center(child: new CircularProgressIndicator())
             : new GridView.count(
-                crossAxisCount: 2,
+                crossAxisCount:orientation==Orientation.portrait? 2:4,
                 children: _buildGridCards(context),
                 padding: EdgeInsets.all(2.0),
                 childAspectRatio: 8.0 / 10.0,
