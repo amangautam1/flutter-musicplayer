@@ -4,7 +4,7 @@ A complete and open source music player designed in flutter. It is first complet
 This app exploits Sqlite databse that enables faster loading of songs at startup. Only one time setup for loading songs is needed. This app comes with a lot of features and a more are coming soon.
 <br>
 <br>
-You can download and test app <a href="https://drive.google.com/open?id=1-n1lT14FUtXoa5KUKgbkrrYE5VyRO3KB">Music Player</a> from google drive.
+You can download and test app <a href="https://drive.google.com/file/d/130iZ4if3mHXfb-lgmBfdBkNkWC9Lyv7Q/view?usp=drivesdk">Music Player</a> from google drive.
 # Features
 <li> Play local songs
 <li> Beautiful Home screen
