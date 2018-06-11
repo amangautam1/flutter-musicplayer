@@ -140,7 +140,7 @@ class stateCardDetail extends State<CardDetail> {
                       style: new TextStyle(
                           fontSize: 12.0, color: Colors.grey)),
                   onTap: () {
-                    LastPlay.songs = songs;
+                    MyQueue.songs = songs;
                     Navigator.of(context).push(new MaterialPageRoute(
                         builder: (context) =>
                         new NowPlaying(widget.db, songs, i, 0)));
@@ -152,10 +152,10 @@ class stateCardDetail extends State<CardDetail> {
         ),
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
-          LastPlay.songs = songs;
+          MyQueue.songs = songs;
           Navigator.of(context).push(new MaterialPageRoute(
               builder: (context) =>
-              new NowPlaying(widget.db, LastPlay.songs, 0, 0)));
+              new NowPlaying(widget.db, MyQueue.songs, 0, 0)));
         },
         child: new Icon(Icons.shuffle),
       ),

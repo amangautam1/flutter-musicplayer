@@ -13,6 +13,7 @@ import 'package:musicplayer/views/artists.dart';
 import 'package:musicplayer/views/home.dart';
 import 'package:musicplayer/views/playlists.dart';
 import 'package:musicplayer/views/songs.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MusicHome extends StatefulWidget {
   List<Song> songs;
@@ -108,7 +109,7 @@ class _musicState extends State<MusicHome> {
       });
     }
   }
-
+  GlobalKey<ScaffoldState> scaffoldState = new GlobalKey();
   @override
   Widget build(BuildContext context) {
     var bottomOptions = <BottomNavigationBarItem>[];
@@ -123,6 +124,7 @@ class _musicState extends State<MusicHome> {
     }
     return new WillPopScope(
       child:new Scaffold(
+        key: scaffoldState,
       appBar: _selectedDrawerIndex == 0
           ? null
           : new AppBar(
@@ -133,21 +135,25 @@ class _musicState extends State<MusicHome> {
             ),
       floatingActionButton: new FloatingActionButton(
           child: new Icon(Icons.play_circle_filled),
-          onPressed: () {
-            if (last == null) {
-              Scaffold.of(context).showSnackBar(new SnackBar(content: Text("Play your first song.")));
+          onPressed: () async{
+            var pref=await SharedPreferences.getInstance();
+            var fp=pref.getBool("played");
+            print("fp=====$fp");
+            if (fp==null) {
+              scaffoldState.currentState.showSnackBar(new SnackBar(content: Text("Play your first song.")));
             } else {
               Navigator
                   .of(context)
                   .push(new MaterialPageRoute(builder: (context) {
-                if (LastPlay.songs == null) {
+                if (MyQueue.songs == null) {
                   List<Song> list = new List();
                   list.add(last);
-                  LastPlay.songs = list;
+                  MyQueue.songs = list;
                   return new NowPlaying(db, list, 0, 0);
                 } else
-                  return new NowPlaying(db, LastPlay.songs, LastPlay.index, 1);
+                  return new NowPlaying(db, MyQueue.songs, MyQueue.index, 1);
               }));
+
             }
           }),
       drawer: new Drawer(
@@ -198,7 +204,7 @@ class _musicState extends State<MusicHome> {
           ),
           new FlatButton(
             onPressed: () {
-              LastPlay.player.stop();
+              MyQueue.player.stop();
               Navigator.of(context).pop(true);
             },
             child: new Text('Yes'),

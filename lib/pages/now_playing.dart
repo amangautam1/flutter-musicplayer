@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:musicplayer/database/database_client.dart';
 import 'package:musicplayer/util/lastplay.dart';
-import 'package:local_notifications/local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NowPlaying extends StatefulWidget {
   int mode;
@@ -40,7 +40,9 @@ class _stateNowPlaying extends State<NowPlaying> {
   void initPlayer() async {
     if (player == null) {
       player = MusicFinder();
-      LastPlay.player=player;
+      MyQueue.player=player;
+      var pref=await SharedPreferences.getInstance();
+      pref.setBool("played", true);
     }
     //  int i= await widget.db.isfav(song);
     setState(() {
@@ -76,7 +78,7 @@ class _stateNowPlaying extends State<NowPlaying> {
 
 
   void updatePage(int index) {
-    LastPlay.index = index;
+    MyQueue.index = index;
     song = widget.songs[index];
     song.timestamp = new DateTime.now().millisecondsSinceEpoch;
     if (song.count == null) {
@@ -169,7 +171,7 @@ class _stateNowPlaying extends State<NowPlaying> {
                         new ListTile(
                           leading: new CircleAvatar(
                             child: widget.songs[i].id ==
-                                    LastPlay.songs[LastPlay.index].id
+                                    MyQueue.songs[MyQueue.index].id
                                 ? new Icon(Icons.insert_chart)
                                 : getImage(widget.songs[i]) != null
                                     ? new Image.file(
@@ -196,9 +198,9 @@ class _stateNowPlaying extends State<NowPlaying> {
                           ),
                           onTap: () {
                             setState(() {
-                              LastPlay.index = i;
+                              MyQueue.index = i;
                               player.stop();
-                              updatePage(LastPlay.index);
+                              updatePage(MyQueue.index);
                               Navigator.pop(context);
                             });
                           },

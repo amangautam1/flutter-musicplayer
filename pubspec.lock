@@ -172,13 +172,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0-alpha.9"
-  local_notifications:
-    dependency: "direct main"
-    description:
-      name: local_notifications
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.6"
   logging:
     dependency: transitive
     description:
@@ -291,6 +284,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.29.0+1"
+  shared_preferences:
+    dependency: "direct main"
+    description:
+      name: shared_preferences
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.2"
   shelf:
     dependency: transitive
     description:

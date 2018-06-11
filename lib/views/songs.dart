@@ -74,10 +74,10 @@ class _songsState extends State<Songs> {
                               style: new TextStyle(
                                   fontSize: 12.0, color: Colors.grey)),
                           onTap: () {
-                            LastPlay.songs = songs;
+                            MyQueue.songs = songs;
                             Navigator.of(context).push(new MaterialPageRoute(
                                 builder: (context) => new NowPlaying(
-                                    widget.db, LastPlay.songs, i, 0)));
+                                    widget.db, MyQueue.songs, i, 0)));
                           },
                         ),
                       ],

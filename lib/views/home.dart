@@ -152,7 +152,7 @@ class stateHome extends State<Home> {
                           new FloatingActionButton(
                             heroTag: "shuffle",
                             onPressed: () {
-                              LastPlay.songs = songs;
+                              MyQueue.songs = songs;
                               Navigator.of(context).push(
                                   new MaterialPageRoute(builder: (context) {
                                 return new NowPlaying(widget.db, songs,
@@ -240,10 +240,8 @@ class stateHome extends State<Home> {
                         // padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
                         padding: EdgeInsets.fromLTRB(4.0, 8.0, 0.0, 0.0),
                         child: Column(
-                          //TODO: Align labels to the bottom and center (103)
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            //TODO: Handle overflowing labels (103)
                             Text(
                               albums[i].album,
                               style: new TextStyle(fontSize: 18.0),
@@ -308,10 +306,8 @@ class stateHome extends State<Home> {
                         // padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
                         padding: EdgeInsets.fromLTRB(4.0, 8.0, 0.0, 0.0),
                         child: Column(
-                          //TODO: Align labels to the bottom and center (103)
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            //TODO: Handle overflowing labels (103)
                             Text(
                               recents[i].title,
                               style: new TextStyle(fontSize: 18.0),
@@ -331,7 +327,7 @@ class stateHome extends State<Home> {
                   ],
                 ),
                 onTap: () {
-                  LastPlay.songs = recents;
+                  MyQueue.songs = recents;
                   Navigator
                       .of(context)
                       .push(new MaterialPageRoute(builder: (context) {

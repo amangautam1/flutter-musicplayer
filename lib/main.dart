@@ -6,14 +6,12 @@ import 'package:musicplayer/musichome.dart';
 
 void main() => runApp(new MyApp());
 
-final ThemeData themedata=new ThemeData(
-  brightness: Brightness.dark
-);
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: new MusicHome(),
     );
   }

@@ -50,7 +50,7 @@ class _statesearch extends State<SearchSong> {
           widget.songs.retainWhere((song) =>
               (song.title + " " + song.album + " " + song.artist) == selected);
           Navigator.pop(context);
-          LastPlay.songs = widget.songs;
+          MyQueue.songs = widget.songs;
           Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
             return new NowPlaying(widget.db, widget.songs, 0, 0);
           }));
