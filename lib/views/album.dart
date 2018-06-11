@@ -4,6 +4,7 @@ import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:musicplayer/database/database_client.dart';
 import 'package:musicplayer/pages/card_detail.dart';
+import 'package:musicplayer/util/utility.dart';
 
 class Album extends StatefulWidget {
   DatabaseClient db;
@@ -32,11 +33,7 @@ class _stateAlbum extends State<Album> {
     });
   }
 
-  dynamic getImage(Song song) {
-    return song.albumArt == null
-        ? null
-        : new File.fromUri(Uri.parse(song.albumArt));
-  }
+
 
   List<Card> _buildGridCards(BuildContext context) {
     return songs.map((song) {
@@ -64,10 +61,8 @@ class _stateAlbum extends State<Album> {
                   // padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
                   padding: EdgeInsets.fromLTRB(4.0, 8.0, 0.0, 0.0),
                   child: Column(
-                    //TODO: Align labels to the bottom and center (103)
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      //TODO: Handle overflowing labels (103)
                       Text(
                         song.album,
                         style: new TextStyle(fontSize: 18.0),

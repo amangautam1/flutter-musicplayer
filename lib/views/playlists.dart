@@ -36,7 +36,7 @@ class _statePlaylist extends State<PlayList> {
       children: <Widget>[
         new ListTile(
           leading: new Icon(Icons.call_received),
-          title: new Text("Recently added"),
+          title: new Text("Recently played"),
           subtitle: new Text("songs"),
           onTap: () {
             Navigator
@@ -71,7 +71,8 @@ class _statePlaylist extends State<PlayList> {
               return new ListSongs(widget.db, 3,orientation);
             }));
           },
-        )
+        ),
+        new Divider(),
       ],
     );
   }
@@ -117,7 +118,8 @@ class _statePlaylist extends State<PlayList> {
                   selected=3;
                 });
               },
-            )
+            ),
+            new Divider(),
           ],
         ),
         ),

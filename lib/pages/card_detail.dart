@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:musicplayer/database/database_client.dart';
 import 'package:musicplayer/pages/now_playing.dart';
 import 'package:musicplayer/util/lastplay.dart';
+import 'package:musicplayer/util/utility.dart';
 
 class CardDetail extends StatefulWidget {
   int id;
@@ -122,14 +123,7 @@ class stateCardDetail extends State<CardDetail> {
               delegate: new SliverChildBuilderDelegate((builder, i) {
                 return new ListTile(
                   leading: new CircleAvatar(
-                    child: getImage(songs[i]) != null
-                        ? new Image.file(
-                      getImage(songs[i]),
-                      height: 120.0,
-                      fit: BoxFit.cover,
-                    )
-                        : new Text(songs[i].title[0].toUpperCase()),
-                  ),
+                    child: avatar(getImage(songs[i]),songs[i].title)),
                   title: new Text(songs[i].title,
                       maxLines: 1, style: new TextStyle(fontSize: 18.0)),
                   subtitle: new Text(

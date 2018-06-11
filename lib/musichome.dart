@@ -6,6 +6,7 @@ import 'package:musicplayer/database/database_client.dart';
 import 'package:musicplayer/pages/about.dart';
 import 'package:musicplayer/pages/material_search.dart';
 import 'package:musicplayer/pages/now_playing.dart';
+import 'package:musicplayer/pages/settings.dart';
 import 'package:musicplayer/util/lastplay.dart';
 import 'package:musicplayer/views/album.dart';
 import 'package:musicplayer/views/artists.dart';
@@ -133,17 +134,21 @@ class _musicState extends State<MusicHome> {
       floatingActionButton: new FloatingActionButton(
           child: new Icon(Icons.play_circle_filled),
           onPressed: () {
-            Navigator
-                .of(context)
-                .push(new MaterialPageRoute(builder: (context) {
-              if (LastPlay.songs == null) {
-                List<Song> list = new List();
-                list.add(last);
-                LastPlay.songs = list;
-                return new NowPlaying(db, list, 0, 0);
-              } else
-                return new NowPlaying(db, LastPlay.songs, LastPlay.index, 1);
-            }));
+            if (last == null) {
+              Scaffold.of(context).showSnackBar(new SnackBar(content: Text("Play your first song.")));
+            } else {
+              Navigator
+                  .of(context)
+                  .push(new MaterialPageRoute(builder: (context) {
+                if (LastPlay.songs == null) {
+                  List<Song> list = new List();
+                  list.add(last);
+                  LastPlay.songs = list;
+                  return new NowPlaying(db, list, 0, 0);
+                } else
+                  return new NowPlaying(db, LastPlay.songs, LastPlay.index, 1);
+              }));
+            }
           }),
       drawer: new Drawer(
         child: new Column(
@@ -152,17 +157,15 @@ class _musicState extends State<MusicHome> {
                 accountName: new Text("Music player"), accountEmail: null),
             new Column(
               children: <Widget>[
-                new ListTile(
-                  leading: new Icon(Icons.info),
-                  title: new Text("About"),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(context,
-                        new MaterialPageRoute(builder: (context) {
-                      return new About();
+
+                new ListTile(leading: new Icon(Icons.settings,),
+                    title: new Text("Settings"),
+                    onTap: (){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (context){
+                      return new Settings();
                     }));
-                  },
-                )
+                    }),
               ],
             )
           ],

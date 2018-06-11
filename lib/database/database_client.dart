@@ -59,7 +59,7 @@ class DatabaseClient {
   }
 
   Future<List<Song>> fetchSongs() async {
-    List<Map> results = await _db.query("songs", columns: Song.Columns);
+    List<Map> results = await _db.query("songs", columns: Song.Columns,orderBy: "title");
     List<Song> songs = new List();
     results.forEach((s) {
       Song song = new Song.fromMap(s);
