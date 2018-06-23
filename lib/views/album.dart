@@ -33,8 +33,6 @@ class _stateAlbum extends State<Album> {
     });
   }
 
-
-
   List<Card> _buildGridCards(BuildContext context) {
     return songs.map((song) {
       return Card(
@@ -42,19 +40,22 @@ class _stateAlbum extends State<Album> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              AspectRatio(
-                aspectRatio: 18 / 16,
-                child: getImage(song) != null
-                    ? new Image.file(
-                        getImage(song),
-                        height: 120.0,
-                        fit: BoxFit.fitWidth,
-                      )
-                    : new Image.asset(
-                        "images/back.jpg",
-                        height: 120.0,
-                        fit: BoxFit.cover,
-                      ),
+              new Hero(
+                tag: song.album,
+                child: AspectRatio(
+                  aspectRatio: 18 / 16,
+                  child: getImage(song) != null
+                      ? new Image.file(
+                          getImage(song),
+                          height: 120.0,
+                          fit: BoxFit.fill,
+                        )
+                      : new Image.asset(
+                          "images/back.jpg",
+                          height: 120.0,
+                          fit: BoxFit.cover,
+                        ),
+                ),
               ),
               Expanded(
                 child: Padding(
@@ -81,11 +82,14 @@ class _stateAlbum extends State<Album> {
             ],
           ),
           onTap: () {
-            Navigator
-                .of(context)
-                .push(new MaterialPageRoute(builder: (context) {
+            Navigator.push(context, new MaterialPageRoute(builder: (_) {
               return new CardDetail(widget.db, song, 0);
             }));
+            /*Navigator
+                .of(context)
+                .push(new MaterialPageRoute(builder: (_) {
+              return new CardDetail(widget.db, song, 0);
+            }));*/
           },
         ),
       );
@@ -94,18 +98,17 @@ class _stateAlbum extends State<Album> {
 
   @override
   Widget build(BuildContext context) {
-    final Orientation orientation=MediaQuery.of(context).orientation;
+    final Orientation orientation = MediaQuery.of(context).orientation;
     return new Container(
         child: isLoading
             ? new Center(
                 child: new CircularProgressIndicator(),
               )
             : new GridView.count(
-                crossAxisCount: orientation==Orientation.portrait?2:4,
+                crossAxisCount: orientation == Orientation.portrait ? 2 : 4,
                 children: _buildGridCards(context),
                 padding: EdgeInsets.all(2.0),
                 childAspectRatio: 8.0 / 10.0,
-              )
-    );
+              ));
   }
 }

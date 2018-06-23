@@ -56,7 +56,11 @@ class _songsState extends State<Songs> {
                           height: 8.0,
                         ),
                         new ListTile(
-                          leading: avatar(getImage(songs[i]),songs[i].title),
+                          leading: new Hero(
+                            tag: songs[i].id,
+                            child: avatar(
+                                context, getImage(songs[i]), songs[i].title),
+                          ),
                           title: new Text(songs[i].title,
                               maxLines: 1,
                               style: new TextStyle(fontSize: 18.0)),

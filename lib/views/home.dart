@@ -50,7 +50,7 @@ class stateHome extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final Orientation orientation=MediaQuery.of(context).orientation;
+    final Orientation orientation = MediaQuery.of(context).orientation;
     return new CustomScrollView(
       slivers: <Widget>[
         new SliverAppBar(
@@ -74,7 +74,24 @@ class stateHome extends State<Home> {
             background: new Stack(
               fit: StackFit.expand,
               children: <Widget>[
-                isLoading
+                new Hero(
+                  tag: isLoading ? "" : last.title,
+                  child: isLoading
+                      ? new Image.asset(
+                          "images/back.jpg",
+                          fit: BoxFit.fitWidth,
+                        )
+                      : getImage(last) != null
+                          ? new Image.file(
+                              getImage(last),
+                              fit: BoxFit.cover,
+                            )
+                          : new Image.asset(
+                              "images/back.jpg",
+                              fit: BoxFit.fitWidth,
+                            ),
+                )
+                /*isLoading
                     ? new Image.asset(
                         "images/back.jpg",
                         fit: BoxFit.fitWidth,
@@ -87,12 +104,11 @@ class stateHome extends State<Home> {
                         : new Image.asset(
                             "images/back.jpg",
                             fit: BoxFit.fitWidth,
-                          ),
+                          ),*/
               ],
             ),
           ),
         ),
-
         new SliverList(
           delegate: !isLoading
               ? new SliverChildListDelegate(<Widget>[
@@ -118,7 +134,7 @@ class stateHome extends State<Home> {
                             onPressed: () {
                               Navigator.of(context).push(
                                   new MaterialPageRoute(builder: (context) {
-                                return new ListSongs(widget.db, 1,orientation);
+                                return new ListSongs(widget.db, 1, orientation);
                               }));
                             },
                             child: new Icon(Icons.history),
@@ -136,7 +152,7 @@ class stateHome extends State<Home> {
                             onPressed: () {
                               Navigator.of(context).push(
                                   new MaterialPageRoute(builder: (context) {
-                                return new ListSongs(widget.db, 2,orientation);
+                                return new ListSongs(widget.db, 2, orientation);
                               }));
                             },
                             child: new Icon(Icons.show_chart),
@@ -204,7 +220,6 @@ class stateHome extends State<Home> {
         ),
       ],
     );
-
   }
 
   Widget randomW() {
@@ -220,6 +235,8 @@ class stateHome extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
+                        child: new Hero(
+                      tag: albums[i].album,
                       child: getImage(albums[i]) != null
                           ? new Image.file(
                               getImage(albums[i]),
@@ -233,7 +250,7 @@ class stateHome extends State<Home> {
                               width: 200.0,
                               fit: BoxFit.cover,
                             ),
-                    ),
+                    )),
                     SizedBox(
                       width: 200.0,
                       child: Padding(
@@ -286,19 +303,22 @@ class stateHome extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      child: getImage(recents[i]) != null
-                          ? new Image.file(
-                              getImage(recents[i]),
-                              height: 120.0,
-                              width: 200.0,
-                              fit: BoxFit.cover,
-                            )
-                          : new Image.asset(
-                              "images/back.jpg",
-                              height: 120.0,
-                              width: 200.0,
-                              fit: BoxFit.cover,
-                            ),
+                      child: new Hero(
+                        tag: recents[i].title,
+                        child: getImage(recents[i]) != null
+                            ? new Image.file(
+                                getImage(recents[i]),
+                                height: 120.0,
+                                width: 200.0,
+                                fit: BoxFit.cover,
+                              )
+                            : new Image.asset(
+                                "images/back.jpg",
+                                height: 120.0,
+                                width: 200.0,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
                     ),
                     SizedBox(
                       width: 200.0,

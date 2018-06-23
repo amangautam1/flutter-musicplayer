@@ -12,7 +12,7 @@ class ListSongs extends StatefulWidget {
   int mode;
   Orientation orientation;
   // mode =1=>recent, 2=>top, 3=>fav
-  ListSongs(this.db, this.mode,this.orientation);
+  ListSongs(this.db, this.mode, this.orientation);
   @override
   State<StatefulWidget> createState() {
     return new _listSong();
@@ -30,7 +30,6 @@ class _listSong extends State<ListSongs> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initSongs();
   }
@@ -74,11 +73,12 @@ class _listSong extends State<ListSongs> {
   Widget build(BuildContext context) {
     initSongs();
     return new Scaffold(
-        appBar: widget.orientation==Orientation.portrait?new AppBar(
-          title: getTitle(widget.mode),
-        ):null,
-        body
-            : new Container(
+        appBar: widget.orientation == Orientation.portrait
+            ? new AppBar(
+                title: getTitle(widget.mode),
+              )
+            : null,
+        body: new Container(
           child: isLoading
               ? new Center(
                   child: new CircularProgressIndicator(),
@@ -87,12 +87,14 @@ class _listSong extends State<ListSongs> {
                   itemCount: songs.length,
                   itemBuilder: (context, i) => new Column(
                         children: <Widget>[
-                          new Divider(
+                          /* new Divider(
                             height: 8.0,
-                          ),
+                          ),*/
                           new ListTile(
-                            leading: new CircleAvatar(
-                              child: avatar(getImage(songs[i]),songs[i].title),
+                            leading: new Hero(
+                              tag: songs[i].id,
+                              child: avatar(
+                                  context, getImage(songs[i]), songs[i].title),
                             ),
                             title: new Text(songs[i].title,
                                 maxLines: 1,

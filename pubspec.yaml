@@ -30,6 +30,13 @@ flutter:
     - images/avatar.jpg
     - images/artist.jpg
 
+  fonts:
+      - family: Raleway
+        fonts:
+          - asset: fonts/Raleway-Regular.ttf
+          - asset: fonts/Raleway-Italic.ttf
+            style: italic
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

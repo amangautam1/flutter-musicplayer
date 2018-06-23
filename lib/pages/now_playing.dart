@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:musicplayer/database/database_client.dart';
 import 'package:musicplayer/util/lastplay.dart';
+import 'package:musicplayer/util/utility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NowPlaying extends StatefulWidget {
@@ -20,7 +18,8 @@ class NowPlaying extends StatefulWidget {
   }
 }
 
-class _stateNowPlaying extends State<NowPlaying> {
+class _stateNowPlaying extends State<NowPlaying>
+    with SingleTickerProviderStateMixin {
   MusicFinder player;
   Duration duration;
   Duration position;
@@ -28,29 +27,58 @@ class _stateNowPlaying extends State<NowPlaying> {
   Song song;
   int isfav = 1;
   Orientation orientation;
+  AnimationController _animationController;
+  Animation<Color> _animateColor;
+  bool isOpened = true;
+  Animation<double> _animateIcon;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-  //  SystemChrome.setPreferredOrientations(
-    //    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    initAnim();
     initPlayer();
+  }
+
+  initAnim() {
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+          ..addListener(() {
+            setState(() {});
+          });
+    _animateIcon =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _animateColor = ColorTween(
+      begin: Colors.deepPurple,
+      end: Colors.purpleAccent[700],
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        0.00,
+        1.00,
+        curve: Curves.linear,
+      ),
+    ));
+  }
+
+  animateForward() {
+    _animationController.forward();
+  }
+
+  animateReverse() {
+    _animationController.reverse();
   }
 
   void initPlayer() async {
     if (player == null) {
       player = MusicFinder();
-      MyQueue.player=player;
-      var pref=await SharedPreferences.getInstance();
+      MyQueue.player = player;
+      var pref = await SharedPreferences.getInstance();
       pref.setBool("played", true);
     }
-    //  int i= await widget.db.isfav(song);
     setState(() {
       if (widget.mode == 0) {
         player.stop();
       }
       updatePage(widget.index);
-      print("song count=${song.count}"); // song = widget.song;
       isPlaying = true;
     });
     player.setDurationHandler((d) => setState(() {
@@ -76,7 +104,6 @@ class _stateNowPlaying extends State<NowPlaying> {
     });
   }
 
-
   void updatePage(int index) {
     MyQueue.index = index;
     song = widget.songs[index];
@@ -86,24 +113,27 @@ class _stateNowPlaying extends State<NowPlaying> {
     } else {
       song.count++;
     }
-    widget.db.updateSong(song);
+    if (widget.db != null) widget.db.updateSong(song);
     isfav = song.isFav;
     player.play(song.uri);
-    isPlaying = true;
-
+    animateReverse();
+    setState(() {
+      isPlaying = true;
+      // isOpened = !isOpened;
+    });
   }
 
   void _playpause() {
     if (isPlaying) {
       player.pause();
+      animateForward();
       setState(() {
         isPlaying = false;
-        //  song = widget.songs[widget.index];
       });
     } else {
       player.play(song.uri);
+      animateReverse();
       setState(() {
-        //song = widget.songs[widget.index];
         isPlaying = true;
       });
     }
@@ -111,7 +141,6 @@ class _stateNowPlaying extends State<NowPlaying> {
 
   Future next() async {
     player.stop();
-    // int i=await widget.db.isfav(song);
     setState(() {
       int i = ++widget.index;
       if (i >= widget.songs.length) {
@@ -138,21 +167,14 @@ class _stateNowPlaying extends State<NowPlaying> {
     next();
   }
 
-  dynamic getImage(Song song) {
-    return song.albumArt == null
-        ? null
-        : new File.fromUri(Uri.parse(song.albumArt));
-  }
-
   GlobalKey<ScaffoldState> scaffoldState = new GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    orientation=MediaQuery.of(context).orientation;
+    orientation = MediaQuery.of(context).orientation;
     return new Scaffold(
-      key: scaffoldState,
-      body: orientation==Orientation.portrait?potrait():landscape()
-    );
+        key: scaffoldState,
+        body: orientation == Orientation.portrait ? potrait() : landscape());
   }
 
   void _showBottomSheet() {
@@ -169,19 +191,8 @@ class _stateNowPlaying extends State<NowPlaying> {
                           height: 8.0,
                         ),
                         new ListTile(
-                          leading: new CircleAvatar(
-                            child: widget.songs[i].id ==
-                                    MyQueue.songs[MyQueue.index].id
-                                ? new Icon(Icons.insert_chart)
-                                : getImage(widget.songs[i]) != null
-                                    ? new Image.file(
-                                        getImage(widget.songs[i]),
-                                        height: 120.0,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : new Text(
-                                        widget.songs[i].title[0].toUpperCase()),
-                          ),
+                          leading: avatar(context, getImage(widget.songs[i]),
+                              widget.songs[i].title),
                           title: new Text(widget.songs[i].title,
                               maxLines: 1,
                               style: new TextStyle(fontSize: 18.0)),
@@ -191,18 +202,20 @@ class _stateNowPlaying extends State<NowPlaying> {
                             style: new TextStyle(
                                 fontSize: 12.0, color: Colors.grey),
                           ),
-                          trailing: new Text(
-                            (i + 1).toString(),
-                            style: new TextStyle(
-                                fontSize: 12.0, color: Colors.grey),
-                          ),
+                          trailing: song.id == widget.songs[i].id
+                              ? new Icon(
+                                  Icons.play_circle_filled,
+                                  color: Colors.deepPurple,
+                                )
+                              : new Text(
+                                  (i + 1).toString(),
+                                  style: new TextStyle(
+                                      fontSize: 12.0, color: Colors.grey),
+                                ),
                           onTap: () {
-                            setState(() {
-                              MyQueue.index = i;
-                              player.stop();
-                              updatePage(MyQueue.index);
-                              Navigator.pop(context);
-                            });
+                            player.stop();
+                            updatePage(i);
+                            Navigator.pop(context);
                           },
                         ),
                       ],
@@ -211,29 +224,33 @@ class _stateNowPlaying extends State<NowPlaying> {
         });
   }
 
-  Widget potrait(){
+  Widget potrait() {
     return new Container(
       // color: Colors.transparent,
       child: new Column(
         children: <Widget>[
           new AspectRatio(
             aspectRatio: 15 / 15,
-            child: getImage(song) != null
-                ? new Image.file(
-              getImage(song),
-              fit: BoxFit.cover,
-            )
-                : new Image.asset(
-              "images/back.jpg",
-              fit: BoxFit.fitHeight,
+            child: new Hero(
+              tag: song.id,
+              child: getImage(song) != null
+                  ? new Image.file(
+                      getImage(song),
+                      fit: BoxFit.cover,
+                    )
+                  : new Image.asset(
+                      "images/back.jpg",
+                      fit: BoxFit.fitHeight,
+                    ),
             ),
           ),
           new Slider(
             min: 0.0,
             value: position?.inMilliseconds?.toDouble() ?? 0.0,
+            max: song.duration.toDouble() + 1000,
             onChanged: (double value) =>
                 player.seek((value / 1000).roundToDouble()),
-            max: song.duration.toDouble() + 1000,
+            divisions: song.duration,
           ),
           new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -277,21 +294,18 @@ class _stateNowPlaying extends State<NowPlaying> {
           new Expanded(
             child: new Center(
               child: new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   new IconButton(
                     icon: new Icon(Icons.skip_previous, size: 40.0),
                     onPressed: prev,
                   ),
-                  new Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0)),
                   new FloatingActionButton(
-                      child: !isPlaying
-                          ? new Icon(Icons.play_arrow)
-                          : new Icon(Icons.pause),
-                      onPressed: _playpause),
-                  new Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0)),
+                    backgroundColor: _animateColor.value,
+                    child: new AnimatedIcon(
+                        icon: AnimatedIcons.pause_play, progress: _animateIcon),
+                    onPressed: _playpause,
+                  ),
                   new IconButton(
                     icon: new Icon(Icons.skip_next, size: 40.0),
                     onPressed: next,
@@ -317,9 +331,9 @@ class _stateNowPlaying extends State<NowPlaying> {
                   icon: isfav == 0
                       ? new Icon(Icons.favorite_border)
                       : new Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                  ),
+                          Icons.favorite,
+                          color: Colors.deepPurple,
+                        ),
                   onPressed: () {
                     setFav(song);
                   })
@@ -330,28 +344,29 @@ class _stateNowPlaying extends State<NowPlaying> {
     );
   }
 
-  Widget landscape(){
+  Widget landscape() {
     return new Row(
       children: <Widget>[
         new Container(
-          width:350.0,
-            child:  new AspectRatio(
-          aspectRatio: 15 / 19,
-          child: getImage(song) != null
-              ? new Image.file(
-            getImage(song),
-            fit: BoxFit.cover,
-          )
-              : new Image.asset(
-            "images/back.jpg",
-            fit: BoxFit.fitHeight,
-          ),
-        ),
+          width: 350.0,
+          child: new AspectRatio(
+              aspectRatio: 15 / 19,
+              child: new Hero(
+                tag: song.id,
+                child: getImage(song) != null
+                    ? new Image.file(
+                        getImage(song),
+                        fit: BoxFit.cover,
+                      )
+                    : new Image.asset(
+                        "images/back.jpg",
+                        fit: BoxFit.fitHeight,
+                      ),
+              )),
         ),
         new Expanded(
           child: new Column(
             children: <Widget>[
-
               new Expanded(
                 child: new Center(
                   child: new Column(
@@ -367,7 +382,8 @@ class _stateNowPlaying extends State<NowPlaying> {
                       new Text(
                         song.artist,
                         maxLines: 1,
-                        style: new TextStyle(fontSize: 14.0, color: Colors.grey),
+                        style:
+                            new TextStyle(fontSize: 14.0, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -401,21 +417,20 @@ class _stateNowPlaying extends State<NowPlaying> {
               new Expanded(
                 child: new Center(
                   child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       new IconButton(
                         icon: new Icon(Icons.skip_previous, size: 40.0),
                         onPressed: prev,
                       ),
-                      new Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0)),
+                      //fab,
                       new FloatingActionButton(
-                          child: !isPlaying
-                              ? new Icon(Icons.play_arrow)
-                              : new Icon(Icons.pause),
-                          onPressed: _playpause),
-                      new Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0)),
+                        backgroundColor: _animateColor.value,
+                        child: new AnimatedIcon(
+                            icon: AnimatedIcons.pause_play,
+                            progress: _animateIcon),
+                        onPressed: _playpause,
+                      ),
                       new IconButton(
                         icon: new Icon(Icons.skip_next, size: 40.0),
                         onPressed: next,
@@ -441,9 +456,9 @@ class _stateNowPlaying extends State<NowPlaying> {
                       icon: isfav == 0
                           ? new Icon(Icons.favorite_border)
                           : new Icon(
-                        Icons.favorite,
-                        color: Colors.red,
-                      ),
+                              Icons.favorite,
+                              color: Colors.deepPurple,
+                            ),
                       onPressed: () {
                         setFav(song);
                       })
@@ -455,6 +470,7 @@ class _stateNowPlaying extends State<NowPlaying> {
       ],
     );
   }
+
   Future<void> setFav(song) async {
     int i = await widget.db.favSong(song);
     setState(() {

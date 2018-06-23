@@ -59,7 +59,8 @@ class DatabaseClient {
   }
 
   Future<List<Song>> fetchSongs() async {
-    List<Map> results = await _db.query("songs", columns: Song.Columns,orderBy: "title");
+    List<Map> results =
+        await _db.query("songs", columns: Song.Columns, orderBy: "title");
     List<Song> songs = new List();
     results.forEach((s) {
       Song song = new Song.fromMap(s);
@@ -105,7 +106,6 @@ class DatabaseClient {
       Song song = new Song.fromMap(s);
       songs.add(song);
     });
-    print(songs);
     return songs;
   }
 
@@ -120,7 +120,6 @@ class DatabaseClient {
       Song song = new Song.fromMap(s);
       songs.add(song);
     });
-    print(songs);
     return songs;
   }
 
@@ -128,8 +127,8 @@ class DatabaseClient {
     //  List<Map> results = await _db.query("songs",
     // distinct: true,
     //columns: Song.Columns );
-    List<Map> results =
-        await _db.rawQuery("select * from songs order by RANDOM() limit 10");
+    List<Map> results = await _db.rawQuery(
+        "select distinct albumid,album,artist,albumArt from songs group by album order by RANDOM() limit 10");
     List<Song> songs = new List();
     results.forEach((s) {
       Song song = new Song.fromMap(s);
@@ -188,17 +187,20 @@ class DatabaseClient {
 
   Future<int> updateSong(Song song) async {
     int id = 0;
-    var count = Sqflite.firstIntValue(await _db
-        .rawQuery("SELECT COUNT(*) FROM songs WHERE id = ?", [song.id]));
-    if (count == 0) {
-      print("count=" + count.toString());
-      id = await _db.insert("songs", song.toMap());
-    } else {
-      print("count=" + count.toString());
-      await _db
-          .update("songs", song.toMap(), where: "id= ?", whereArgs: [song.id]);
-      // await _db.rawQuery("update songs set count =count +1 where id=${song.id}");
-      print("updated");
+    if (id != 9990) {
+      // id==9999 for shared song
+      var count = Sqflite.firstIntValue(await _db
+          .rawQuery("SELECT COUNT(*) FROM songs WHERE id = ?", [song.id]));
+      if (count == 0) {
+        print("count=" + count.toString());
+        id = await _db.insert("songs", song.toMap());
+      } else {
+        print("count=" + count.toString());
+        await _db.update("songs", song.toMap(),
+            where: "id= ?", whereArgs: [song.id]);
+        // await _db.rawQuery("update songs set count =count +1 where id=${song.id}");
+        print("updated");
+      }
     }
 
     return id;

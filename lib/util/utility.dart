@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
@@ -8,18 +9,22 @@ dynamic getImage(Song song) {
       ? null
       : new File.fromUri(Uri.parse(song.albumArt));
 }
+//var n=RawImage()
 
-Widget avatar(File f, String title) {
+Widget avatar(context, File f, String title) {
   return new Material(
     borderRadius: new BorderRadius.circular(30.0),
     elevation: 2.0,
     child: f != null
         ? new CircleAvatar(
-      backgroundImage: new FileImage(f,
-      ),
-    )
+            backgroundColor: Theme.of(context).accentColor,
+            backgroundImage: new FileImage(
+              f,
+            ),
+          )
         : new CircleAvatar(
-      child: new Text(title[0].toUpperCase()),
-    ),
+            backgroundColor: Theme.of(context).accentColor,
+            child: new Text(title[0].toUpperCase()),
+          ),
   );
 }
