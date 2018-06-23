@@ -4,7 +4,7 @@ A complete and open source music player designed in flutter. It is first complet
 This app exploits Sqlite databse that enables faster loading of songs at startup. Only one time setup for loading songs is needed. This app comes with a lot of features and a more are coming soon.
 <br>
 <br>
-You can download appp from releases <a href="https://github.com/amangautam1/flutter-musicplayer/releases">Music Player</a>.
+You can download app from releases <a href="https://github.com/amangautam1/flutter-musicplayer/releases">Music Player</a>.
 # Features
 <li> Play local songs
 <li> Beautiful Home screen
@@ -20,10 +20,12 @@ You can download appp from releases <a href="https://github.com/amangautam1/flut
 <li> Playlist
 <li> Add to favourite
 <li> Shuffle
-<li> Queue
+<li> Playing queue
 <li> Play/pause
 <li> Next/prev
-<li> Song queue
+
+<li> landscape mode supported 
+
   
 # Screenshots
 <table>
@@ -120,3 +122,8 @@ SOFTWARE.
 For help getting started with Flutter, view our online
 [documentation](https://flutter.io/).
 
+
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/amangautam1/flutter-musicplayer/badge.svg?style=beer-square)](https://beerpay.io/amangautam1/flutter-musicplayer)  [![Beerpay](https://beerpay.io/amangautam1/flutter-musicplayer/make-wish.svg?style=flat-square)](https://beerpay.io/amangautam1/flutter-musicplayer?focus=wish)
