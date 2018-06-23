@@ -31,7 +31,7 @@ You can download app from releases <a href="https://github.com/amangautam1/flutt
 <table>
   <tr>
     <td>
-      <img src="demo/now_playing.png" height=400 width=250/>
+      <img src="demo/now_palying.png" height=400 width=250/>
       Now playing
     </td>
     <td>
