@@ -23,6 +23,10 @@ You can download app from releases <a href="https://github.com/amangautam1/flutt
 <li> Playing queue
 <li> Play/pause
 <li> Next/prev
+<li> Theme(dark/light)
+<li> Animations
+<li> Play from SD card
+<li> Awesome font
 
 <li> landscape mode supported 
 
