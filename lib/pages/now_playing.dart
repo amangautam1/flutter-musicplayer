@@ -113,7 +113,7 @@ class _stateNowPlaying extends State<NowPlaying>
     } else {
       song.count++;
     }
-    if (widget.db != null) widget.db.updateSong(song);
+    if (widget.db != null&&song.id!=9999/*shared song id*/) widget.db.updateSong(song);
     isfav = song.isFav;
     player.play(song.uri);
     animateReverse();

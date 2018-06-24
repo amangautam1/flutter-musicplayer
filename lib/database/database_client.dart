@@ -187,7 +187,6 @@ class DatabaseClient {
 
   Future<int> updateSong(Song song) async {
     int id = 0;
-    if (id != 9990) {
       // id==9999 for shared song
       var count = Sqflite.firstIntValue(await _db
           .rawQuery("SELECT COUNT(*) FROM songs WHERE id = ?", [song.id]));
@@ -200,7 +199,7 @@ class DatabaseClient {
             where: "id= ?", whereArgs: [song.id]);
         // await _db.rawQuery("update songs set count =count +1 where id=${song.id}");
         print("updated");
-      }
+
     }
 
     return id;

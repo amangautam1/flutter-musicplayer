@@ -75,7 +75,7 @@ class stateHome extends State<Home> {
               fit: StackFit.expand,
               children: <Widget>[
                 new Hero(
-                  tag: isLoading ? "" : last.title,
+                  tag: isLoading ? "" : last.id,
                   child: isLoading
                       ? new Image.asset(
                           "images/back.jpg",
@@ -91,20 +91,6 @@ class stateHome extends State<Home> {
                               fit: BoxFit.fitWidth,
                             ),
                 )
-                /*isLoading
-                    ? new Image.asset(
-                        "images/back.jpg",
-                        fit: BoxFit.fitWidth,
-                      )
-                    : getImage(last) != null
-                        ? new Image.file(
-                            getImage(last),
-                            fit: BoxFit.cover,
-                          )
-                        : new Image.asset(
-                            "images/back.jpg",
-                            fit: BoxFit.fitWidth,
-                          ),*/
               ],
             ),
           ),
@@ -304,7 +290,7 @@ class stateHome extends State<Home> {
                   children: <Widget>[
                     SizedBox(
                       child: new Hero(
-                        tag: recents[i].title,
+                        tag: recents[i].id,
                         child: getImage(recents[i]) != null
                             ? new Image.file(
                                 getImage(recents[i]),
