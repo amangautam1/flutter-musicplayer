@@ -23,6 +23,10 @@ You can download app from releases <a href="https://github.com/amangautam1/flutt
 <li> Playing queue
 <li> Play/pause
 <li> Next/prev
+<li> Theme(dark/light)
+<li> Animations
+<li> Play from SD card
+<li> Awesome font
 
 <li> landscape mode supported 
 
@@ -31,16 +35,16 @@ You can download app from releases <a href="https://github.com/amangautam1/flutt
 <table>
   <tr>
     <td>
-      <img src="demo/nowplaying.png" height=400 width=250/>
+      <img src="demo/now_palying.png" height=400 width=250/>
       Now playing
     </td>
     <td>
-      <img src="demo/home1.png" height=400 width=250>
+      <img src="demo/home.png" height=400 width=250>
       Home Screen
       </td>
       <td>
-      <img src="demo/home2.png" height=400 width=250>
-      Home Screen
+      <img src="demo/dark_home.png" height=400 width=250>
+     Dark Home Screen
       </td>
     </tr>
   <tr>
@@ -67,15 +71,15 @@ You can download app from releases <a href="https://github.com/amangautam1/flutt
       Queue
       </td>
       <td>
-      <img src="demo/fav.png" height=400 width=250>
-      Favourites
+      <img src="demo/album_view.png" height=400 width=250>
+     Album view
     </td>
     </tr>
   <tr>
-      <td>
-      <img src="demo/recent.png" height=400 width=250>
-      Recently played
-      </td>
+       <td>
+      <img src="demo/dark_now_playing.png" height=400 width=250>
+      Dark Now Playing
+    </td>
       <td>
       <img src="demo/top.png" height=400 width=250>
       Top tracks
