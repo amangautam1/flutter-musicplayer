@@ -81,7 +81,7 @@ You can download app from releases <a href="https://github.com/amangautam1/flutt
       Dark Now Playing
     </td>
       <td>
-      <img src="demo/top.png" height=400 width=250>
+      <img src="demo/top_tracks.png" height=400 width=250>
       Top tracks
       </td>
     <td>
