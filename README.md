@@ -29,6 +29,11 @@ You can download app from releases <a href="https://github.com/amangautam1/flutt
 <li> Awesome font
 
 <li> landscape mode supported 
+ 
+ <b>Things to be fixed</b>
+ <li> Add to favourites
+ <li> Search
+  
 
   
 # Screenshots
