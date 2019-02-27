@@ -32,7 +32,6 @@ You can download app from releases <a href="https://github.com/amangautam1/flutt
  
  <b>Things to be fixed</b>
  <li> Add to favourites
- <li> Search
   
 
   
