@@ -5,23 +5,11 @@ import 'package:musicplayer/database/database_client.dart';
 import 'package:musicplayer/pages/now_playing.dart';
 import 'package:musicplayer/util/lastplay.dart';
 
-class SearchSong extends StatefulWidget {
-  DatabaseClient db;
-  List<Song> songs;
+class SearchSong extends StatelessWidget {
+  final DatabaseClient db;
+  final List<Song> songs;
   SearchSong(this.db, this.songs);
-  @override
-  State<StatefulWidget> createState() {
-    return new _statesearch();
-  }
-}
-
-class _statesearch extends State<SearchSong> {
-  bool isLoading = true;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+  List<Song> results;
 
   @override
   Widget build(BuildContext context) {
@@ -29,24 +17,25 @@ class _statesearch extends State<SearchSong> {
         body: new SafeArea(
       child: new MaterialSearchInput<String>(
         placeholder: 'Search songs', //placeholder of the search bar text input
-        results: widget.songs
+        results: songs
             .map((song) => new MaterialSearchResult<String>(
                   value: song.title, //The value must be of type <String>
                   text: song.title, //String that will be show in the list
                   icon: Icons.music_note,
                 ))
             .toList(),
-
         onSelect: (String selected) async {
           if (selected == null) {
             return;
           }
           print(selected);
-          widget.songs.retainWhere((song) => (song.title) == selected);
+          results = songs.where((song) => song.title == selected).toList();
+          print(results);
+
           Navigator.pop(context);
-          MyQueue.songs = widget.songs;
+          MyQueue.songs = results;
           Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
-            return new NowPlaying(widget.db, widget.songs, 0, 0);
+            return new NowPlaying(db, results, 0, 0);
           }));
         },
       ),
