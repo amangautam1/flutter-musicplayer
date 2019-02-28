@@ -13,6 +13,7 @@ import 'package:musicplayer/views/home.dart';
 import 'package:musicplayer/views/playlists.dart';
 import 'package:musicplayer/views/songs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:musicplayer/pages/material_search.dart';
 
 class MusicHome extends StatefulWidget {
   List<Song> songs;
@@ -171,7 +172,14 @@ class _musicState extends State<MusicHome> {
             : new AppBar(
                 title: new Text(title),
                 actions: <Widget>[
-                  new IconButton(icon: Icon(Icons.search), onPressed: null)
+                  new IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(new MaterialPageRoute(builder: (context) {
+                          return new SearchSong(db, songs);
+                        }));
+                      })
                 ],
               ),
         floatingActionButton: new FloatingActionButton(
@@ -183,8 +191,7 @@ class _musicState extends State<MusicHome> {
                 scaffoldState.currentState.showSnackBar(
                     new SnackBar(content: Text("Play your first song.")));
               } else {
-                Navigator
-                    .of(context)
+                Navigator.of(context)
                     .push(new MaterialPageRoute(builder: (context) {
                   if (MyQueue.songs == null) {
                     List<Song> list = new List();
@@ -209,8 +216,7 @@ class _musicState extends State<MusicHome> {
                       title: new Text("Settings"),
                       onTap: () {
                         Navigator.of(context).pop();
-                        Navigator
-                            .of(context)
+                        Navigator.of(context)
                             .push(new MaterialPageRoute(builder: (context) {
                           return new Settings();
                         }));
