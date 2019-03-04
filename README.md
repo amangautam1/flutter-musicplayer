@@ -5,6 +5,9 @@ This app exploits Sqlite databse that enables faster loading of songs at startup
 <br>
 <br>
 You can download app from releases <a href="https://github.com/amangautam1/flutter-musicplayer/releases">Music Player</a>.
+
+<br>
+Please <b>star</b> the repo up, if you like the work.
 # Features
 <li> Play local songs
 <li> Beautiful Home screen
