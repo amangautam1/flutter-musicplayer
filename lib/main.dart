@@ -55,25 +55,7 @@ class _mainState extends State<MyApp> {
         inactiveTrackColor: Colors.deepPurpleAccent[100],
         thumbColor: Colors.purple,
         disabledThumbColor: Colors.grey,),
-
-      // new SliderThemeData(
-
-      //   activeTickMarkColor: Colors.white70,
-      //   inactiveTickMarkColor: Colors.black,
-      //   overlayColor: Colors.black12,
-
-      //   valueIndicatorColor: Colors.deepPurpleAccent,
-      //   thumbShape: new RoundSliderThumbShape(),
-      //   disabledActiveTrackColor: Colors.red,
-      //   disabledInactiveTickMarkColor: Colors.green,
-      //   disabledInactiveTrackColor: Colors.grey,
-      //   disabledActiveTickMarkColor: Colors.cyanAccent,
-      //   disabledThumbColor: Colors.grey,
-      //   valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-      //   valueIndicatorTextStyle: TextStyle(color: Colors.black87),
-      //   showValueIndicator: ShowValueIndicator.always,
-      //   trackHeight: 2.0
-      // ),
+      
       dialogBackgroundColor: Colors.black,
     );
   }
