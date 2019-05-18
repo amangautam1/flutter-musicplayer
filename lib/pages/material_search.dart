@@ -15,30 +15,33 @@ class SearchSong extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
         body: new SafeArea(
-      child: new MaterialSearchInput<String>(
-        placeholder: 'Search songs', //placeholder of the search bar text input
-        results: songs
-            .map((song) => new MaterialSearchResult<String>(
-                  value: song.title, //The value must be of type <String>
-                  text: song.title, //String that will be show in the list
-                  icon: Icons.music_note,
-                ))
-            .toList(),
-        onSelect: (String selected) async {
-          if (selected == null) {
-            return;
-          }
-          print(selected);
-          results = songs.where((song) => song.title == selected).toList();
-          print(results);
+          child: new MaterialSearch<String>(
+            placeholder: 'Search songs', //placeholder of the search bar text input
+            results: songs
+                .map((song) => new MaterialSearchResult<String>(
+              value: song.title, //The value must be of type <String>
+              text: song.title, //String that will be show in the list
+              icon: Icons.music_note,
+            ))
+                .toList(),
+            onSelect: (dynamic selected) async {
+              if (selected == null) {
+                return;
+              }
+              print(selected);
+              results = songs.where((song) => song.title == selected).toList();
+              print(results);
 
-          Navigator.pop(context);
-          MyQueue.songs = results;
-          Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
-            return new NowPlaying(db, results, 0, 0);
-          }));
-        },
-      ),
-    ));
+              Navigator.pop(context);
+              MyQueue.songs = results;
+              Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+                return new NowPlaying(db, results, 0, 0);
+              }));
+            },
+            onSubmit: (String value) {
+              print(value);
+            },
+          ),
+        ));
   }
 }

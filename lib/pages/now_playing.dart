@@ -25,7 +25,7 @@ class _stateNowPlaying extends State<NowPlaying>
   Duration position;
   bool isPlaying = false;
   Song song;
-  int isfav = 1;
+  int isfav;
   Orientation orientation;
   AnimationController _animationController;
   Animation<Color> _animateColor;
@@ -107,18 +107,21 @@ class _stateNowPlaying extends State<NowPlaying>
   void updatePage(int index) {
     MyQueue.index = index;
     song = widget.songs[index];
+    widget.index = index;
     song.timestamp = new DateTime.now().millisecondsSinceEpoch;
     if (song.count == null) {
       song.count = 0;
     } else {
       song.count++;
     }
-    if (widget.db != null&&song.id!=9999/*shared song id*/) widget.db.updateSong(song);
+    if (widget.db != null && song.id != 9999 /*shared song id*/)
+      widget.db.updateSong(song);
     isfav = song.isFav;
     player.play(song.uri);
     animateReverse();
     setState(() {
       isPlaying = true;
+      isfav = song.isFav;
       // isOpened = !isOpened;
     });
   }
@@ -141,6 +144,7 @@ class _stateNowPlaying extends State<NowPlaying>
 
   Future next() async {
     player.stop();
+    print(widget.index);
     setState(() {
       int i = ++widget.index;
       if (i >= widget.songs.length) {
@@ -173,8 +177,26 @@ class _stateNowPlaying extends State<NowPlaying>
   Widget build(BuildContext context) {
     orientation = MediaQuery.of(context).orientation;
     return new Scaffold(
-        key: scaffoldState,
-        body: orientation == Orientation.portrait ? potrait() : landscape());
+      key: scaffoldState,
+      body: Stack(children: <Widget>[
+        orientation == Orientation.portrait ? potrait() : landscape(),
+        new Positioned(
+          //Place it at the top, and not use the entire screen
+          top: 0.0,
+          left: 0.0,
+          right: 0.0,
+          child: AppBar(
+            title: Text('Now Playing'),
+            backgroundColor: Colors.transparent, //No more green
+            elevation: 0.0, //Shadow gone
+            leading: IconButton(
+              icon: Icon(Icons.clear),
+              onPressed: () => {Navigator.pop(context)},
+            ),
+          ),
+        ),
+      ]),
+    );
   }
 
   void _showBottomSheet() {
@@ -215,6 +237,7 @@ class _stateNowPlaying extends State<NowPlaying>
                           onTap: () {
                             player.stop();
                             updatePage(i);
+                            print(i);
                             Navigator.pop(context);
                           },
                         ),
@@ -321,6 +344,7 @@ class _stateNowPlaying extends State<NowPlaying>
                   icon: new Icon(Icons.shuffle),
                   onPressed: () {
                     widget.songs.shuffle();
+
                     scaffoldState.currentState.showSnackBar(
                         new SnackBar(content: new Text("List Suffled")));
                   }),
@@ -328,14 +352,18 @@ class _stateNowPlaying extends State<NowPlaying>
                   icon: new Icon(Icons.queue_music),
                   onPressed: _showBottomSheet),
               new IconButton(
-                  icon: isfav == 0
-                      ? new Icon(Icons.favorite_border)
-                      : new Icon(
-                          Icons.favorite,
-                          color: Colors.deepPurple,
-                        ),
+                  icon: Icon(Icons.playlist_add),
+//                  isfav == 0
+//                      ? new Icon(Icons.favorite_border)
+//                      : new Icon(
+//                          Icons.favorite,
+//                          color: Colors.deepPurple,
+//                        ),
                   onPressed: () {
                     setFav(song);
+
+                    scaffoldState.currentState.showSnackBar(
+                        new SnackBar(content: new Text("Song added to favourites")));
                   })
             ],
           )
@@ -453,14 +481,18 @@ class _stateNowPlaying extends State<NowPlaying>
                       icon: new Icon(Icons.queue_music),
                       onPressed: _showBottomSheet),
                   new IconButton(
-                      icon: isfav == 0
-                          ? new Icon(Icons.favorite_border)
-                          : new Icon(
-                              Icons.favorite,
-                              color: Colors.deepPurple,
-                            ),
+                     icon: Icon(Icons.playlist_add),
+                  //isfav == 0
+//                          ? new Icon(Icons.favorite_border)
+//                          : new Icon(
+//                              Icons.favorite,
+//                              color: Colors.deepPurple,
+//                            ),
                       onPressed: () {
                         setFav(song);
+                        scaffoldState.currentState.showSnackBar(
+                            new SnackBar(content: new Text("Song added to favourites")));
+
                       })
                 ],
               )
@@ -472,12 +504,17 @@ class _stateNowPlaying extends State<NowPlaying>
   }
 
   Future<void> setFav(song) async {
-    int i = await widget.db.favSong(song);
-    setState(() {
-      if (isfav == 1)
-        isfav = 0;
-      else
-        isfav = 1;
-    });
+    var i = await widget.db.favSong(song);
+    print(i);
+//    setState(() {
+//      if (i == "added") {
+//        isfav = 1;
+//        widget.songs[widget.index].isFav=1;
+//      }
+//      else {
+//        isfav = 0;
+//        widget.songs[widget.index].isFav=1;
+//      }
+//    });
   }
 }

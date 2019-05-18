@@ -65,7 +65,7 @@ class _listSong extends State<ListSongs> {
         return new Text("Favourites");
         break;
       default:
-        return;
+        return null;
     }
   }
 

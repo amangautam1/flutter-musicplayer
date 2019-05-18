@@ -11,7 +11,7 @@ import 'package:musicplayer/pages/now_playing.dart';
 import 'package:musicplayer/util/lastplay.dart';
 
 class Home extends StatefulWidget {
-  DatabaseClient db;
+  final DatabaseClient db;
   Home(this.db);
   @override
   State<StatefulWidget> createState() {
@@ -23,6 +23,7 @@ class stateHome extends State<Home> {
   List<Song> albums, recents, songs;
   bool isLoading = true;
   Song last;
+  Song top;
   @override
   void initState() {
     // TODO: implement initState
@@ -42,7 +43,7 @@ class stateHome extends State<Home> {
     recents.removeAt(0); // as it is showing in header
     last = await widget.db.fetchLastSong();
     songs = await widget.db.fetchSongs();
-    print(last.title);
+    top = await widget.db.fetchTopSong().then((item) => item[0]);
     setState(() {
       isLoading = false;
     });
@@ -62,8 +63,7 @@ class stateHome extends State<Home> {
             new IconButton(
                 icon: Icon(Icons.search),
                 onPressed: () {
-                  Navigator
-                      .of(context)
+                  Navigator.of(context)
                       .push(new MaterialPageRoute(builder: (context) {
                     return new SearchSong(widget.db, songs);
                   }));
@@ -98,6 +98,30 @@ class stateHome extends State<Home> {
         new SliverList(
           delegate: !isLoading
               ? new SliverChildListDelegate(<Widget>[
+                  new Padding(
+                    padding:
+                        const EdgeInsets.only(left: 8.0, top: 8.0, bottom: 8.0),
+                    child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        new Text(
+                          "Last played",
+                          style: new TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                        new Text(
+                          last.title + " By " + last.artist,
+                          style: new TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontSize: 17.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   new Padding(
                     padding:
                         const EdgeInsets.only(left: 8.0, top: 8.0, bottom: 8.0),
@@ -189,7 +213,7 @@ class stateHome extends State<Home> {
                     padding:
                         const EdgeInsets.only(left: 8.0, top: 8.0, bottom: 8.0),
                     child: new Text(
-                      "You may like!",
+                      "Albums you may like!",
                       style: new TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
@@ -197,6 +221,77 @@ class stateHome extends State<Home> {
                     ),
                   ),
                   randomW(),
+                  new Divider(),
+                  new Padding(
+                    padding:
+                        const EdgeInsets.only(left: 8.0, top: 8.0, bottom: 8.0),
+                    child: new Text(
+                      "Most played!",
+                      style: new TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ),
+                  new Card(
+                    child: new InkResponse(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                              child: new Hero(
+                            tag: top.timestamp,
+                            child: getImage(top) != null
+                                ? new Image.file(
+                                    getImage(top),
+                                    height: 180.0,
+                                    width: MediaQuery.of(context).size.width,
+                                    fit: BoxFit.cover,
+                                  )
+                                : new Image.asset(
+                                    "images/back.jpg",
+                                    height: 180.0,
+                                    width: MediaQuery.of(context).size.width,
+                                    fit: BoxFit.cover,
+                                  ),
+                          )),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Padding(
+                              // padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                              padding: EdgeInsets.fromLTRB(4.0, 8.0, 0.0, 0.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    top.title,
+                                    style: new TextStyle(fontSize: 18.0),
+                                    maxLines: 1,
+                                  ),
+                                  SizedBox(height: 8.0),
+                                  Text(
+                                    top.artist,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 14.0, color: Colors.grey),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        List<Song> list = new List();
+                        list.add(top);
+                        MyQueue.songs = list;
+                        Navigator.of(context)
+                            .push(new MaterialPageRoute(builder: (context) {
+                          return new NowPlaying(widget.db, list, 0, 0);
+                        }));
+                      },
+                    ),
+                  ),
                 ])
               : new SliverChildListDelegate(<Widget>[
                   new Center(
@@ -264,8 +359,7 @@ class stateHome extends State<Home> {
                   ],
                 ),
                 onTap: () {
-                  Navigator
-                      .of(context)
+                  Navigator.of(context)
                       .push(new MaterialPageRoute(builder: (context) {
                     return new CardDetail(widget.db, albums[i], 0);
                   }));
@@ -334,8 +428,7 @@ class stateHome extends State<Home> {
                 ),
                 onTap: () {
                   MyQueue.songs = recents;
-                  Navigator
-                      .of(context)
+                  Navigator.of(context)
                       .push(new MaterialPageRoute(builder: (context) {
                     return new NowPlaying(widget.db, recents, i, 0);
                   }));

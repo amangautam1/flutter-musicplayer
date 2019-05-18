@@ -191,7 +191,7 @@ class _musicState extends State<MusicHome> {
                 scaffoldState.currentState.showSnackBar(
                     new SnackBar(content: Text("Play your first song.")));
               } else {
-                Navigator.of(context)
+               Navigator.of(context)
                     .push(new MaterialPageRoute(builder: (context) {
                   if (MyQueue.songs == null) {
                     List<Song> list = new List();

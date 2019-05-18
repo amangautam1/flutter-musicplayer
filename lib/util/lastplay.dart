@@ -5,4 +5,5 @@ class MyQueue {
   static Song song; // current playing song
   static int index; // current playing song index
   static MusicFinder player = new MusicFinder();
+  static List<Song> allSongs;
 }

@@ -37,7 +37,7 @@ class _mainState extends State<MyApp> {
     if (val == null) {
       theme = lightTheme;
     } else if (val == 1) {
-      theme = darktheme;
+      theme = getDarkTheme(context);
     } else {
       theme = lightTheme;
     }
@@ -45,31 +45,39 @@ class _mainState extends State<MyApp> {
       isLoading = false;
     });
   }
+  getDarkTheme(context){
+    return  new ThemeData(
+      brightness: Brightness.dark,
+      accentColor: Colors.grey[800],
+      fontFamily: 'Raleway',
+      sliderTheme:  SliderTheme.of(context).copyWith(
+        activeTrackColor: Colors.deepPurpleAccent[700],
+        inactiveTrackColor: Colors.deepPurpleAccent[100],
+        thumbColor: Colors.purple,
+        disabledThumbColor: Colors.grey,),
 
-  ThemeData darktheme = new ThemeData(
-    brightness: Brightness.dark,
-    accentColor: Colors.grey[800],
-    fontFamily: 'Raleway',
-    sliderTheme: new SliderThemeData(
-      activeTrackColor: Colors.deepPurpleAccent[700],
-      inactiveTrackColor: Colors.deepPurpleAccent[100],
-      activeTickMarkColor: Colors.white70,
-      inactiveTickMarkColor: Colors.black,
-      overlayColor: Colors.black12,
-      thumbColor: Colors.purple,
-      valueIndicatorColor: Colors.deepPurpleAccent,
-      thumbShape: new RoundSliderThumbShape(),
-      disabledActiveTrackColor: Colors.red,
-      disabledInactiveTickMarkColor: Colors.green,
-      disabledInactiveTrackColor: Colors.grey,
-      disabledActiveTickMarkColor: Colors.cyanAccent,
-      disabledThumbColor: Colors.grey,
-      valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-      valueIndicatorTextStyle: TextStyle(color: Colors.black87),
-      showValueIndicator: ShowValueIndicator.always,
-    ),
-    dialogBackgroundColor: Colors.black,
-  );
+      // new SliderThemeData(
+
+      //   activeTickMarkColor: Colors.white70,
+      //   inactiveTickMarkColor: Colors.black,
+      //   overlayColor: Colors.black12,
+
+      //   valueIndicatorColor: Colors.deepPurpleAccent,
+      //   thumbShape: new RoundSliderThumbShape(),
+      //   disabledActiveTrackColor: Colors.red,
+      //   disabledInactiveTickMarkColor: Colors.green,
+      //   disabledInactiveTrackColor: Colors.grey,
+      //   disabledActiveTickMarkColor: Colors.cyanAccent,
+      //   disabledThumbColor: Colors.grey,
+      //   valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+      //   valueIndicatorTextStyle: TextStyle(color: Colors.black87),
+      //   showValueIndicator: ShowValueIndicator.always,
+      //   trackHeight: 2.0
+      // ),
+      dialogBackgroundColor: Colors.black,
+    );
+  }
+
   ThemeData lightTheme = new ThemeData(
     brightness: Brightness.light,
     fontFamily: 'Raleway',

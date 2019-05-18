@@ -37,10 +37,8 @@ class DatabaseClient {
     var count = Sqflite.firstIntValue(await _db
         .rawQuery("SELECT COUNT(*) FROM songs WHERE id = ?", [song.id]));
     if (count == 0) {
-      print("count=" + count.toString());
       id = await _db.insert("songs", song.toMap());
     } else {
-      print("count=" + count.toString());
       await _db
           .update("songs", song.toMap(), where: "id= ?", whereArgs: [song.id]);
     }
@@ -50,7 +48,6 @@ class DatabaseClient {
   Future<bool> alreadyLoaded() async {
     var count =
         Sqflite.firstIntValue(await _db.rawQuery("SELECT COUNT(*) FROM songs"));
-    print("count=$count");
     if (count > 0) {
       return true;
     } else {
@@ -91,8 +88,7 @@ class DatabaseClient {
       Song song = new Song.fromMap(s);
       songs.add(song);
     });
-    print(songs);
-    return songs;
+      return songs;
   }
 
   Future<List<Song>> fetchArtist() async {
@@ -134,7 +130,6 @@ class DatabaseClient {
       Song song = new Song.fromMap(s);
       songs.add(song);
     });
-    print(songs);
     return songs;
   }
 
@@ -143,10 +138,9 @@ class DatabaseClient {
     var count = Sqflite.firstIntValue(await _db
         .rawQuery("SELECT COUNT(*) FROM recents WHERE id = ?", [song.id]));
     if (count == 0) {
-      print("count=" + count.toString());
       id = await _db.insert("recents", song.toMap());
     } else {
-      print("count=" + count.toString());
+
       await _db.update("recents", song.toMap(),
           where: "id= ?", whereArgs: [song.id]);
     }
@@ -154,25 +148,17 @@ class DatabaseClient {
   }
 
   Future<List<Song>> fetchRecentSong() async {
-    //  List<Map> results = await _db.query("songs",
-    // distinct: true,
-    //columns: Song.Columns );
     List<Map> results =
-        await _db.rawQuery("select * from songs order by timestamp desc");
+        await _db.rawQuery("select * from songs order by timestamp desc limit 25");
     List<Song> songs = new List();
     results.forEach((s) {
       Song song = new Song.fromMap(s);
       songs.add(song);
     });
-    print("recent sngs ");
-    print(songs);
     return songs;
   }
 
   Future<List<Song>> fetchTopSong() async {
-    //  List<Map> results = await _db.query("songs",
-    // distinct: true,
-    //columns: Song.Columns );
     List<Map> results =
         await _db.rawQuery("select * from songs order by count desc limit 25");
     List<Song> songs = new List();
@@ -180,8 +166,6 @@ class DatabaseClient {
       Song song = new Song.fromMap(s);
       songs.add(song);
     });
-    print("top sngs ");
-    print(songs);
     return songs;
   }
 
@@ -191,14 +175,10 @@ class DatabaseClient {
       var count = Sqflite.firstIntValue(await _db
           .rawQuery("SELECT COUNT(*) FROM songs WHERE id = ?", [song.id]));
       if (count == 0) {
-        print("count=" + count.toString());
         id = await _db.insert("songs", song.toMap());
       } else {
-        print("count=" + count.toString());
         await _db.update("songs", song.toMap(),
             where: "id= ?", whereArgs: [song.id]);
-        // await _db.rawQuery("update songs set count =count +1 where id=${song.id}");
-        print("updated");
 
     }
 
@@ -209,28 +189,22 @@ class DatabaseClient {
     var c = Sqflite.firstIntValue(
         await _db.rawQuery("select isFav from songs where is=${song.id}"));
     if (c == 0) {
-      print("not fav");
-      //  await _db.rawQuery("update songs set isFav =1 where id=${song.id}");
       return 1;
     } else {
-      print("fav");
-      //await _db.rawQuery("update songs set isFav =0 where id=${song.id}");
       return 0;
     }
   }
 
-  Future<int> favSong(Song song) async {
-    var c = Sqflite.firstIntValue(
-        await _db.rawQuery("select isFav from songs where id=${song.id}"));
-    if (c == 0) {
-      print("not fav" + c.toString());
+  Future<String> favSong(Song song) async {
+//    var c = Sqflite.firstIntValue(
+//        await _db.rawQuery("select isFav from songs where id=${song.id}"));
+//    if (c == 0) {
       await _db.rawQuery("update songs set isFav =1 where id=${song.id}");
-      return 1;
-    } else {
-      print("fav" + c.toString());
-      await _db.rawQuery("update songs set isFav =0 where id=${song.id}");
-      return 0;
-    }
+      return "added";
+//    } else {
+//      await _db.rawQuery("update songs set isFav =0 where id=${song.id}");
+//      return "removed";
+//    }
   }
 
   Future<Song> fetchLastSong() async {
@@ -240,28 +214,21 @@ class DatabaseClient {
     results.forEach((s) {
       song = new Song.fromMap(s);
     });
-    print("kast" + song.title);
     return song;
   }
 
   Future<List<Song>> fetchFavSong() async {
-    //  List<Map> results = await _db.query("songs",
-    // distinct: true,
-    //columns: Song.Columns );
     List<Map> results = await _db.rawQuery("select * from songs where isFav=1");
     List<Song> songs = new List();
     results.forEach((s) {
       Song song = new Song.fromMap(s);
       songs.add(song);
     });
-    print(songs);
     return songs;
   }
 
   Future<List<Song>> searchSong(String q) async {
-    //  List<Map> results = await _db.query("songs",
-    // distinct: true,
-    //columns: Song.Columns );
+
     List<Map> results =
         await _db.rawQuery("select * from songs where title like '%$q%'");
     List<Song> songs = new List();
@@ -269,7 +236,6 @@ class DatabaseClient {
       Song song = new Song.fromMap(s);
       songs.add(song);
     });
-    print(songs);
     return songs;
   }
 
@@ -280,7 +246,6 @@ class DatabaseClient {
       Song song = new Song.fromMap(s);
       songs.add(song);
     });
-    print(songs);
     return songs;
   }
 }

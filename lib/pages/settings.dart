@@ -44,7 +44,7 @@ class _settingState extends State<Settings> {
                     new Icon(Icons.style, color: Theme.of(context).accentColor),
                 title: new Text(("Theme")),
                 onTap: () async {
-                  showDialog(
+                 var result= showDialog(
                       context: context,
                       builder: (context) {
                         return new SimpleDialog(
@@ -54,8 +54,7 @@ class _settingState extends State<Settings> {
                               value: 0,
                               groupValue: selected,
                               onChanged: (value) {
-                                selected = value;
-                                Navigator.pop(context);
+                                Navigator.pop(context,value);
                               },
                               title: new Text("Light"),
                             ),
@@ -63,8 +62,7 @@ class _settingState extends State<Settings> {
                               value: 1,
                               groupValue: selected,
                               onChanged: (value) {
-                                selected = value;
-                                Navigator.pop(context);
+                                Navigator.pop(context,value);
                               },
                               title: new Text("Dark"),
                             )
@@ -72,10 +70,11 @@ class _settingState extends State<Settings> {
                         );
                       });
                   var pref = await SharedPreferences.getInstance();
-                  if (selected == null) {
+
+                  if (await result == null) {
                     return;
                   } else
-                    switch (selected) {
+                    switch (await result) {
                       case 1:
                         {
                           pref.setInt("theme", 1);
