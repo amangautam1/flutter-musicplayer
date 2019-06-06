@@ -48,6 +48,7 @@ Please <b>star</b> the repo up, if you like the work.
       </td>
       <td>
       <img src="demo/dark_home1.png" height=400 width=250>
+        <br>
      Dark Home Screen
       </td>
     </tr>
