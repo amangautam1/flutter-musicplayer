@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:math';
-
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:musicplayer/database/database_client.dart';
@@ -8,7 +6,10 @@ import 'package:musicplayer/pages/card_detail.dart';
 import 'package:musicplayer/pages/list_songs.dart';
 import 'package:musicplayer/pages/material_search.dart';
 import 'package:musicplayer/pages/now_playing.dart';
+import 'package:musicplayer/sc_model/model.dart';
 import 'package:musicplayer/util/lastplay.dart';
+import 'package:musicplayer/util/utility.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class Home extends StatefulWidget {
   final DatabaseClient db;
@@ -26,24 +27,22 @@ class stateHome extends State<Home> {
   Song top;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     init();
   }
 
-  dynamic getImage(Song song) {
-    return song.albumArt == null
-        ? null
-        : new File.fromUri(Uri.parse(song.albumArt));
-  }
-
   void init() async {
     albums = await widget.db.fetchRandomAlbum();
-    recents = await widget.db.fetchRecentSong();
-    recents.removeAt(0); // as it is showing in header
     last = await widget.db.fetchLastSong();
     songs = await widget.db.fetchSongs();
+    recents = await widget.db.fetchRecentSong();
+    recents.removeAt(0);
     top = await widget.db.fetchTopSong().then((item) => item[0]);
+    ScopedModel
+        .of<SongModel>(context, rebuildOnChange: true)
+        .recents = recents;
+    ScopedModel.of<SongModel>(context, rebuildOnChange: true).init(widget.db);
+
     setState(() {
       isLoading = false;
     });
@@ -55,7 +54,10 @@ class stateHome extends State<Home> {
     return new CustomScrollView(
       slivers: <Widget>[
         new SliverAppBar(
-          expandedHeight: 200.0,
+          expandedHeight: MediaQuery
+              .of(context)
+              .size
+              .height / 2.4,
           floating: false,
           pinned: true,
           title: new Text("Music Player"),
@@ -74,23 +76,27 @@ class stateHome extends State<Home> {
             background: new Stack(
               fit: StackFit.expand,
               children: <Widget>[
-                new Hero(
-                  tag: isLoading ? "" : last.id,
-                  child: isLoading
-                      ? new Image.asset(
-                          "images/back.jpg",
-                          fit: BoxFit.fitWidth,
-                        )
-                      : getImage(last) != null
+                ScopedModelDescendant<SongModel>(
+                  builder: (context, child, model) {
+                    return new Hero(
+                      tag: model.song == null ? "" : model.song.id,
+                      child: model.song == null
+                          ? new Image.asset(
+                        "images/back.jpg",
+                        fit: BoxFit.cover,
+                      )
+                          : getImage(model.song) != null
                           ? new Image.file(
-                              getImage(last),
-                              fit: BoxFit.cover,
-                            )
+                        getImage(model.song),
+                        fit: BoxFit.cover,
+                      )
                           : new Image.asset(
-                              "images/back.jpg",
-                              fit: BoxFit.fitWidth,
-                            ),
-                )
+                        "images/back.jpg",
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -99,27 +105,46 @@ class stateHome extends State<Home> {
           delegate: !isLoading
               ? new SliverChildListDelegate(<Widget>[
                   new Padding(
-                    padding:
-                        const EdgeInsets.only(left: 8.0, top: 8.0, bottom: 8.0),
-                    child: new Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        new Text(
-                          "Last played",
-                          style: new TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      elevation: 2,
+                      child: new Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.play_circle_outline,
+                                size: 50.0,
+                                color: Theme
+                                    .of(context)
+                                    .accentColor,
+                              ),
+                              ScopedModelDescendant<SongModel>(
+                                  builder: (context, child, model) {
+                                    return Flexible(
+                                      child: new Text(
+                                        model.song == null
+                                            ? last.title + " By " + last.artist
+                                            : model.song.title +
+                                            " By " +
+                                            model.song.artist,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 3,
+                                        style: new TextStyle(
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 17.0,
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                            ],
                           ),
-                        ),
-                        new Text(
-                          last.title + " By " + last.artist,
-                          style: new TextStyle(
-                            fontStyle: FontStyle.italic,
-                            fontSize: 17.0,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   new Padding(
@@ -140,19 +165,20 @@ class stateHome extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           new FloatingActionButton(
-                            heroTag: "history",
+                            heroTag: "favourites",
                             onPressed: () {
                               Navigator.of(context).push(
                                   new MaterialPageRoute(builder: (context) {
-                                return new ListSongs(widget.db, 1, orientation);
+                                    return new ListSongs(
+                                        widget.db, 3, orientation);
                               }));
                             },
-                            child: new Icon(Icons.history),
+                            child: new Icon(Icons.favorite_border),
                           ),
                           new Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 4.0)),
-                          new Text("Recents"),
+                          new Text("Favourites"),
                         ],
                       ),
                       new Column(
@@ -233,65 +259,82 @@ class stateHome extends State<Home> {
                       ),
                     ),
                   ),
-                  new Card(
-                    child: new InkResponse(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                              child: new Hero(
-                            tag: top.timestamp,
-                            child: getImage(top) != null
-                                ? new Image.file(
-                                    getImage(top),
-                                    height: 180.0,
-                                    width: MediaQuery.of(context).size.width,
-                                    fit: BoxFit.cover,
-                                  )
-                                : new Image.asset(
-                                    "images/back.jpg",
-                                    height: 180.0,
-                                    width: MediaQuery.of(context).size.width,
-                                    fit: BoxFit.cover,
+                  ScopedModelDescendant<SongModel>(
+                      builder: (context, child, model) {
+                        return new Card(
+                          child: new InkResponse(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                    child: new Hero(
+                                      tag: _top(model).timestamp,
+                                      child: getImage(_top(model)) != null
+                                          ? new Image.file(
+                                        getImage(_top(model)),
+                                        height: 180.0,
+                                        width: MediaQuery
+                                            .of(context)
+                                            .size
+                                            .width,
+                                        fit: BoxFit.cover,
+                                      )
+                                          : new Image.asset(
+                                        "images/back.jpg",
+                                        height: 180.0,
+                                        width: MediaQuery
+                                            .of(context)
+                                            .size
+                                            .width,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )),
+                                SizedBox(
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width,
+                                  child: Padding(
+                                    // padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                                    padding:
+                                    EdgeInsets.fromLTRB(4.0, 8.0, 0.0, 0.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment
+                                          .start,
+                                      children: <Widget>[
+                                        Text(
+                                          _top(model).title,
+                                          style: new TextStyle(fontSize: 18.0),
+                                          maxLines: 1,
+                                        ),
+                                        SizedBox(height: 8.0),
+                                        Text(
+                                          _top(model).artist,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              fontSize: 14.0,
+                                              color: Colors.grey),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                          )),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: Padding(
-                              // padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                              padding: EdgeInsets.fromLTRB(4.0, 8.0, 0.0, 0.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    top.title,
-                                    style: new TextStyle(fontSize: 18.0),
-                                    maxLines: 1,
-                                  ),
-                                  SizedBox(height: 8.0),
-                                  Text(
-                                    top.artist,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontSize: 14.0, color: Colors.grey),
-                                  )
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
+                            onTap: () {
+                              List<Song> list = new List();
+                              list.add(_top(model));
+                              MyQueue.songs = list;
+                              Navigator.of(context)
+                                  .push(
+                                  new MaterialPageRoute(builder: (context) {
+                                    return new NowPlaying(
+                                        widget.db, list, 0, 0);
+                                  }));
+                            },
                           ),
-                        ],
-                      ),
-                      onTap: () {
-                        List<Song> list = new List();
-                        list.add(top);
-                        MyQueue.songs = list;
-                        Navigator.of(context)
-                            .push(new MaterialPageRoute(builder: (context) {
-                          return new NowPlaying(widget.db, list, 0, 0);
-                        }));
-                      },
-                    ),
-                  ),
+                        );
+                      })
                 ])
               : new SliverChildListDelegate(<Widget>[
                   new Center(
@@ -374,30 +417,32 @@ class stateHome extends State<Home> {
     return new Container(
       //aspectRatio: 16/15,
       height: 200.0,
-      child: new ListView.builder(
-        itemCount: recents.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, i) => new Card(
+      child: ScopedModelDescendant<SongModel>(builder: (context, child, model) {
+        return new ListView.builder(
+            itemCount: _recents(model).length,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, i) =>
+            new Card(
               child: new InkResponse(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
                       child: new Hero(
-                        tag: recents[i].id,
-                        child: getImage(recents[i]) != null
+                        tag: _recents(model)[i],
+                        child: getImage(_recents(model)[i]) != null
                             ? new Image.file(
-                                getImage(recents[i]),
-                                height: 120.0,
-                                width: 200.0,
-                                fit: BoxFit.cover,
-                              )
+                          getImage(_recents(model)[i]),
+                          height: 120.0,
+                          width: 200.0,
+                          fit: BoxFit.cover,
+                        )
                             : new Image.asset(
-                                "images/back.jpg",
-                                height: 120.0,
-                                width: 200.0,
-                                fit: BoxFit.cover,
-                              ),
+                          "images/back.jpg",
+                          height: 120.0,
+                          width: 200.0,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -409,16 +454,16 @@ class stateHome extends State<Home> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              recents[i].title,
+                              _recents(model)[i].title,
                               style: new TextStyle(fontSize: 18.0),
                               maxLines: 1,
                             ),
                             SizedBox(height: 8.0),
                             Text(
-                              recents[i].artist,
+                              _recents(model)[i].artist,
                               maxLines: 1,
-                              style:
-                                  TextStyle(fontSize: 14.0, color: Colors.grey),
+                              style: TextStyle(
+                                  fontSize: 14.0, color: Colors.grey),
                             )
                           ],
                         ),
@@ -427,15 +472,24 @@ class stateHome extends State<Home> {
                   ],
                 ),
                 onTap: () {
-                  MyQueue.songs = recents;
+                  MyQueue.songs = model.recents;
+
                   Navigator.of(context)
                       .push(new MaterialPageRoute(builder: (context) {
-                    return new NowPlaying(widget.db, recents, i, 0);
+                    return new NowPlaying(widget.db, model.recents, i, 0);
                   }));
                 },
               ),
-            ),
-      ),
+            ));
+      }),
     );
+  }
+
+  List<Song> _recents(SongModel model) {
+    return model.recents == null ? recents : model.recents;
+  }
+
+  Song _top(model) {
+    return model.top == null ? top : model.top;
   }
 }

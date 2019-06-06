@@ -1,9 +1,10 @@
-import 'dart:io';
 import 'dart:async';
+import 'dart:io';
+
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DatabaseClient {
   Database _db;
@@ -173,14 +174,14 @@ class DatabaseClient {
     int id = 0;
       // id==9999 for shared song
       var count = Sqflite.firstIntValue(await _db
-          .rawQuery("SELECT COUNT(*) FROM songs WHERE id = ?", [song.id]));
-      if (count == 0) {
-        id = await _db.insert("songs", song.toMap());
-      } else {
+          .rawQuery("SELECT COUNT FROM songs WHERE id = ?", [song.id]));
+
+    if (song.count == null) {
+      song.count = 0;
+    }
+    song.count += 1;
         await _db.update("songs", song.toMap(),
             where: "id= ?", whereArgs: [song.id]);
-
-    }
 
     return id;
   }
@@ -227,6 +228,11 @@ class DatabaseClient {
     return songs;
   }
 
+  Future<bool> removeFavSong(Song song) async {
+    await _db.rawQuery("update songs set isFav= 0 where id=${song.id}");
+
+    return true;
+  }
   Future<List<Song>> searchSong(String q) async {
 
     List<Map> results =

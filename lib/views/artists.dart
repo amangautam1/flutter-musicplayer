@@ -37,12 +37,15 @@ class _stateArtist extends State<Artists> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              AspectRatio(
-                aspectRatio: 18 / 16,
-                child: new Image.asset(
-                  "images/artist.jpg",
-                  height: 120.0,
-                  fit: BoxFit.fitWidth,
+              Hero(
+                tag: song.artist,
+                child: AspectRatio(
+                  aspectRatio: 18 / 16,
+                  child: new Image.asset(
+                    "images/artist.jpg",
+                    height: 120.0,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
               ),
               Expanded(
@@ -58,8 +61,7 @@ class _stateArtist extends State<Artists> {
             ],
           ),
           onTap: () {
-            Navigator
-                .of(context)
+            Navigator.of(context)
                 .push(new MaterialPageRoute(builder: (context) {
               return new CardDetail(widget.db, song, 1);
             }));

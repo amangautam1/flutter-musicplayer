@@ -13,7 +13,10 @@ dependencies:
   path_provider:
   material_search: ^0.2.7
   url_launcher: 3.0.1
-  shared_preferences: ^0.4.2
+  shared_preferences: 
+  media_notification: ^0.0.5
+  dynamic_theme: ^1.0.1
+  scoped_model: 
 
 dev_dependencies:
   flutter_test:

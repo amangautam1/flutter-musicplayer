@@ -2,9 +2,13 @@ import 'dart:async';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:musicplayer/database/database_client.dart';
+import 'package:musicplayer/sc_model/model.dart';
 import 'package:musicplayer/util/lastplay.dart';
 import 'package:musicplayer/util/utility.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
+import 'package:media_notification/media_notification.dart';
 
 class NowPlaying extends StatefulWidget {
   int mode;
@@ -18,8 +22,7 @@ class NowPlaying extends StatefulWidget {
   }
 }
 
-class _stateNowPlaying extends State<NowPlaying>
-    with SingleTickerProviderStateMixin {
+class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
   MusicFinder player;
   Duration duration;
   Duration position;
@@ -30,12 +33,49 @@ class _stateNowPlaying extends State<NowPlaying>
   AnimationController _animationController;
   Animation<Color> _animateColor;
   bool isOpened = true;
+  String status = 'hidden';
   Animation<double> _animateIcon;
+
+  Animation<double> animation;
   @override
   void initState() {
     super.initState();
     initAnim();
     initPlayer();
+
+    MediaNotification.setListener('pause', () {
+      _playpause();
+    });
+
+    MediaNotification.setListener('play', () {
+      _playpause();
+    });
+
+    MediaNotification.setListener('next', () {
+      next();
+    });
+
+    MediaNotification.setListener('prev', () {
+      prev();
+    });
+
+    MediaNotification.setListener('select', () {
+      // yet to be impl
+    });
+  }
+
+  Future<void> hide() async {
+    try {
+      await MediaNotification.hide();
+      setState(() => status = 'hidden');
+    } on PlatformException {}
+  }
+
+  Future<void> show(title, author) async {
+    try {
+      await MediaNotification.show(title: title, author: author);
+      setState(() => status = 'play');
+    } on PlatformException {}
   }
 
   initAnim() {
@@ -109,19 +149,20 @@ class _stateNowPlaying extends State<NowPlaying>
     song = widget.songs[index];
     widget.index = index;
     song.timestamp = new DateTime.now().millisecondsSinceEpoch;
-    if (song.count == null) {
-      song.count = 0;
-    } else {
-      song.count++;
-    }
-    if (widget.db != null && song.id != 9999 /*shared song id*/)
+    print("count=${song.count}");
+
+    // if (widget.db != null && song.id != 9999 /*shared song id*/)
       widget.db.updateSong(song);
-    isfav = song.isFav;
+
     player.play(song.uri);
+    ScopedModel.of<SongModel>(context).updateUI(song, widget.db);
+
     animateReverse();
+    show(song.title, song.artist);
     setState(() {
       isPlaying = true;
       isfav = song.isFav;
+      status = 'play';
       // isOpened = !isOpened;
     });
   }
@@ -131,15 +172,20 @@ class _stateNowPlaying extends State<NowPlaying>
       player.pause();
       animateForward();
       setState(() {
+        status = 'pause';
         isPlaying = false;
+        //hide();
       });
     } else {
       player.play(song.uri);
+      show(song.title, song.artist);
       animateReverse();
       setState(() {
+        status = 'play';
         isPlaying = true;
       });
     }
+    print('Status: ' + status);
   }
 
   Future next() async {
@@ -150,6 +196,7 @@ class _stateNowPlaying extends State<NowPlaying>
       if (i >= widget.songs.length) {
         i = widget.index = 0;
       }
+
       updatePage(i);
     });
   }
@@ -163,6 +210,7 @@ class _stateNowPlaying extends State<NowPlaying>
         widget.index = 0;
         i = widget.index;
       }
+
       updatePage(i);
     });
   }
@@ -176,10 +224,12 @@ class _stateNowPlaying extends State<NowPlaying>
   @override
   Widget build(BuildContext context) {
     orientation = MediaQuery.of(context).orientation;
+
     return new Scaffold(
       key: scaffoldState,
       body: Stack(children: <Widget>[
         orientation == Orientation.portrait ? potrait() : landscape(),
+
         new Positioned(
           //Place it at the top, and not use the entire screen
           top: 0.0,
@@ -199,7 +249,7 @@ class _stateNowPlaying extends State<NowPlaying>
     );
   }
 
-  void _showBottomSheet() {
+  Future _showBottomSheet() async {
     showModalBottomSheet(
         context: context,
         builder: (builder) {
@@ -250,7 +300,7 @@ class _stateNowPlaying extends State<NowPlaying>
   Widget potrait() {
     return new Container(
       // color: Colors.transparent,
-      child: new Column(
+      child: song == null ? Container() : new Column(
         children: <Widget>[
           new AspectRatio(
             aspectRatio: 15 / 15,
@@ -319,9 +369,15 @@ class _stateNowPlaying extends State<NowPlaying>
               child: new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  new IconButton(
-                    icon: new Icon(Icons.skip_previous, size: 40.0),
-                    onPressed: prev,
+                  ScopedModelDescendant<SongModel>(
+                    builder: (context, child, model) {
+                      return new IconButton(
+                          icon: new Icon(Icons.skip_previous, size: 40.0),
+                          onPressed: () {
+                            prev();
+                            model.updateUI(song, widget.db);
+                          });
+                    },
                   ),
                   new FloatingActionButton(
                     backgroundColor: _animateColor.value,
@@ -329,9 +385,15 @@ class _stateNowPlaying extends State<NowPlaying>
                         icon: AnimatedIcons.pause_play, progress: _animateIcon),
                     onPressed: _playpause,
                   ),
-                  new IconButton(
-                    icon: new Icon(Icons.skip_next, size: 40.0),
-                    onPressed: next,
+                  ScopedModelDescendant<SongModel>(
+                    builder: (context, child, model) {
+                      return new IconButton(
+                          icon: new Icon(Icons.skip_next, size: 40.0),
+                          onPressed: () {
+                            next();
+                            model.updateUI(song, widget.db);
+                          });
+                    },
                   ),
                 ],
               ),
@@ -341,6 +403,7 @@ class _stateNowPlaying extends State<NowPlaying>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               new IconButton(
+                  tooltip: "Shuffle",
                   icon: new Icon(Icons.shuffle),
                   onPressed: () {
                     widget.songs.shuffle();
@@ -349,21 +412,18 @@ class _stateNowPlaying extends State<NowPlaying>
                         new SnackBar(content: new Text("List Suffled")));
                   }),
               new IconButton(
+                  tooltip: "Playing queue",
                   icon: new Icon(Icons.queue_music),
                   onPressed: _showBottomSheet),
               new IconButton(
+                  tooltip: "Add to favourites",
                   icon: Icon(Icons.playlist_add),
-//                  isfav == 0
-//                      ? new Icon(Icons.favorite_border)
-//                      : new Icon(
-//                          Icons.favorite,
-//                          color: Colors.deepPurple,
-//                        ),
+
                   onPressed: () {
                     setFav(song);
 
-                    scaffoldState.currentState.showSnackBar(
-                        new SnackBar(content: new Text("Song added to favourites")));
+                    scaffoldState.currentState.showSnackBar(new SnackBar(
+                        content: new Text("Song added to favourites")));
                   })
             ],
           )
@@ -373,7 +433,7 @@ class _stateNowPlaying extends State<NowPlaying>
   }
 
   Widget landscape() {
-    return new Row(
+    return song == null ? Container() : new Row(
       children: <Widget>[
         new Container(
           width: 350.0,
@@ -447,9 +507,15 @@ class _stateNowPlaying extends State<NowPlaying>
                   child: new Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      new IconButton(
-                        icon: new Icon(Icons.skip_previous, size: 40.0),
-                        onPressed: prev,
+                      ScopedModelDescendant<SongModel>(
+                        builder: (context, child, model) {
+                          return new IconButton(
+                              icon: new Icon(Icons.skip_previous, size: 40.0),
+                              onPressed: () {
+                                prev();
+                                model.updateUI(song, widget.db);
+                              });
+                        },
                       ),
                       //fab,
                       new FloatingActionButton(
@@ -459,9 +525,15 @@ class _stateNowPlaying extends State<NowPlaying>
                             progress: _animateIcon),
                         onPressed: _playpause,
                       ),
-                      new IconButton(
-                        icon: new Icon(Icons.skip_next, size: 40.0),
-                        onPressed: next,
+                      ScopedModelDescendant<SongModel>(
+                        builder: (context, child, model) {
+                          return new IconButton(
+                              icon: new Icon(Icons.skip_next, size: 40.0),
+                              onPressed: () {
+                                next();
+                                model.updateUI(song, widget.db);
+                              });
+                        },
                       ),
                     ],
                   ),
@@ -471,6 +543,7 @@ class _stateNowPlaying extends State<NowPlaying>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   new IconButton(
+                      tooltip: "Shuffle",
                       icon: new Icon(Icons.shuffle),
                       onPressed: () {
                         widget.songs.shuffle();
@@ -478,21 +551,16 @@ class _stateNowPlaying extends State<NowPlaying>
                             new SnackBar(content: new Text("List Suffled")));
                       }),
                   new IconButton(
+                      tooltip: "Playing queue",
                       icon: new Icon(Icons.queue_music),
                       onPressed: _showBottomSheet),
                   new IconButton(
-                     icon: Icon(Icons.playlist_add),
-                  //isfav == 0
-//                          ? new Icon(Icons.favorite_border)
-//                          : new Icon(
-//                              Icons.favorite,
-//                              color: Colors.deepPurple,
-//                            ),
+                      icon: Icon(Icons.playlist_add),
+                      tooltip: "Add to Favourite",
                       onPressed: () {
                         setFav(song);
-                        scaffoldState.currentState.showSnackBar(
-                            new SnackBar(content: new Text("Song added to favourites")));
-
+                        scaffoldState.currentState.showSnackBar(new SnackBar(
+                            content: new Text("Song added to favourites")));
                       })
                 ],
               )
@@ -506,15 +574,5 @@ class _stateNowPlaying extends State<NowPlaying>
   Future<void> setFav(song) async {
     var i = await widget.db.favSong(song);
     print(i);
-//    setState(() {
-//      if (i == "added") {
-//        isfav = 1;
-//        widget.songs[widget.index].isFav=1;
-//      }
-//      else {
-//        isfav = 0;
-//        widget.songs[widget.index].isFav=1;
-//      }
-//    });
   }
 }

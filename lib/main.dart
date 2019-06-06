@@ -1,69 +1,33 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:musicplayer/musichome.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:musicplayer/pages/Walkthrough.dart';
+import 'package:musicplayer/sc_model/model.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 void main() => runApp(new MyApp());
 
-class MyApp extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return new _mainState();
-  }
-}
-
-class _mainState extends State<MyApp> {
-  var isLoading = true;
-  ThemeData theme;
-  @override
-  void initState() {
-    super.initState();
-    getTheme();
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      theme: isLoading ? lightTheme : theme,
-      title: "Music player",
-      debugShowCheckedModeBanner: false,
-      home: isLoading ? new Container() : new MusicHome(),
-    );
+    return new DynamicTheme(
+        defaultBrightness: Brightness.light,
+        data: (brightness) =>
+        new ThemeData(
+          primarySwatch: Colors.deepPurple,
+          accentColor: Colors.deepPurpleAccent,
+          fontFamily: 'Raleway',
+          brightness: brightness,
+        ),
+        themedWidgetBuilder: (context, theme) {
+          return ScopedModel<SongModel>(
+            model: new SongModel(),
+            child: new MaterialApp(
+              title: 'Music Player',
+              theme: theme,
+              debugShowCheckedModeBanner: false,
+              home: new TestScreen(),
+            ),
+          );
+        });
   }
-
-  getTheme() async {
-    var pref = await SharedPreferences.getInstance();
-    var val = pref.getInt("theme");
-    print("theme=$val");
-    if (val == null) {
-      theme = lightTheme;
-    } else if (val == 1) {
-      theme = getDarkTheme(context);
-    } else {
-      theme = lightTheme;
-    }
-    setState(() {
-      isLoading = false;
-    });
-  }
-  getDarkTheme(context){
-    return  new ThemeData(
-      brightness: Brightness.dark,
-      accentColor: Colors.grey[800],
-      fontFamily: 'Raleway',
-      sliderTheme:  SliderTheme.of(context).copyWith(
-        activeTrackColor: Colors.deepPurpleAccent[700],
-        inactiveTrackColor: Colors.deepPurpleAccent[100],
-        thumbColor: Colors.purple,
-        disabledThumbColor: Colors.grey,),
-      
-      dialogBackgroundColor: Colors.black,
-    );
-  }
-
-  ThemeData lightTheme = new ThemeData(
-    brightness: Brightness.light,
-    fontFamily: 'Raleway',
-    primaryColor: Colors.deepPurple,
-    accentColor: Colors.deepPurpleAccent,
-  );
 }

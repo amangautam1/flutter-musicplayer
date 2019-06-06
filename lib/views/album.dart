@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:musicplayer/database/database_client.dart';

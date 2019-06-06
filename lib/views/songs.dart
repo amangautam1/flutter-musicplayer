@@ -23,7 +23,6 @@ class _songsState extends State<Songs> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initSongs();
   }
@@ -83,9 +82,38 @@ class _songsState extends State<Songs> {
                                 builder: (context) => new NowPlaying(
                                     widget.db, MyQueue.songs, i, 0)));
                           },
+                          onLongPress: () {
+                            setFav(songs[i]);
+                          },
                         ),
                       ],
                     ),
               ));
+  }
+
+  Future<void> setFav(song) {
+    showDialog(
+      context: context,
+      child: new AlertDialog(
+        title: new Text('Add this to favourites?'),
+        content: new Text(song.title),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text(
+              'No',
+            ),
+          ),
+          new FlatButton(
+            onPressed: () async {
+              await widget.db.favSong(song);
+
+              Navigator.of(context).pop();
+            },
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    );
   }
 }

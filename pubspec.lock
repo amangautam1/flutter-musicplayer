@@ -21,7 +21,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -71,6 +71,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
+  dynamic_theme:
+    dependency: "direct main"
+    description:
+      name: dynamic_theme
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   flute_music_player:
     dependency: "direct main"
     description:
@@ -179,6 +186,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.8"
+  media_notification:
+    dependency: "direct main"
+    description:
+      name: media_notification
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5"
   meta:
     dependency: transitive
     description:
@@ -269,14 +283,21 @@ packages:
       name: quiver
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.3"
+  scoped_model:
+    dependency: "direct main"
+    description:
+      name: scoped_model
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   shared_preferences:
     dependency: "direct main"
     description:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.2"
+    version: "0.5.3+1"
   shelf:
     dependency: transitive
     description:
@@ -379,21 +400,21 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.1"
+    version: "1.6.3"
   test_api:
     dependency: transitive
     description:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.4"
+    version: "0.2.5"
   test_core:
     dependency: transitive
     description:
       name: test_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.3"
+    version: "0.2.5"
   typed_data:
     dependency: transitive
     description:
@@ -445,4 +466,4 @@ packages:
     version: "2.1.15"
 sdks:
   dart: ">=2.2.0 <3.0.0"
-  flutter: ">=0.1.4 <2.0.0"
+  flutter: ">=1.5.0 <2.0.0"

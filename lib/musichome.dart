@@ -4,6 +4,7 @@ import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:musicplayer/database/database_client.dart';
+import 'package:musicplayer/pages/material_search.dart';
 import 'package:musicplayer/pages/now_playing.dart';
 import 'package:musicplayer/pages/settings.dart';
 import 'package:musicplayer/util/lastplay.dart';
@@ -12,8 +13,6 @@ import 'package:musicplayer/views/artists.dart';
 import 'package:musicplayer/views/home.dart';
 import 'package:musicplayer/views/playlists.dart';
 import 'package:musicplayer/views/songs.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:musicplayer/pages/material_search.dart';
 
 class MusicHome extends StatefulWidget {
   List<Song> songs;
@@ -67,73 +66,61 @@ class _musicState extends State<MusicHome> {
   @override
   void initState() {
     super.initState();
-    initPlayer();
-    getSharedData();
+    getLast();
   }
 
-  void initTheme() async {
-    var pref = await SharedPreferences.getInstance();
-    var val = pref.getInt("theme");
-    print("theme=$val");
-    if (val == 1) {
-      color = Theme.of(context).primaryColor;
-      setState(() {
-        themeLoading = false;
-      });
-    }
-  }
 
-  void initPlayer() async {
-    db = new DatabaseClient();
-    await db.create();
-    if (await db.alreadyLoaded()) {
-      setState(() {
-        isLoading = false;
-        getLast();
-      });
-    } else {
-      var songs;
-      try {
-        songs = await MusicFinder.allSongs();
-      } catch (e) {
-        print("failed to get songs");
-      }
-      List<Song> list = new List.from(songs);
-      for (Song song in list) db.upsertSOng(song);
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        isLoading = false;
-        getLast();
-      });
-    }
-  }
+  // void initPlayer() async {
+  //   db = new DatabaseClient();
+  //   await db.create();
+  //   if (await db.alreadyLoaded()) {
+  //     setState(() {
+  //       isLoading = false;
+  //       getLast();
+  //     });
+  //   } else {
+  //     var songs;
+  //     try {
+  //       songs = await MusicFinder.allSongs();
+  //     } catch (e) {
+  //       print("failed to get songs");
+  //     }
+  //     List<Song> list = new List.from(songs);
+  //     for (Song song in list) db.upsertSOng(song);
+  //     if (!mounted) {
+  //       return;
+  //     }
+  //     setState(() {
+  //       isLoading = false;
+  //       getLast();
+  //     });
+  //   }
+  // }
 
-  getSharedData() async {
-    const platform = const MethodChannel('app.channel.shared.data');
-    Map sharedData = await platform.invokeMethod("getSharedData");
-    if (sharedData != null) {
-      if (sharedData["albumArt"] == "null") {
-        sharedData["albumArt"] = null;
-      }
-      Song song = new Song(
-          9999 /*random*/,
-          sharedData["artist"],
-          sharedData["title"],
-          sharedData["album"],
-          null,
-          int.parse(sharedData["duration"]),
-          sharedData["uri"],
-          sharedData["albumArt"]);
-      List<Song> list = new List();
-      list.add((song));
-      MyQueue.songs = list;
-      Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
-        return new NowPlaying(null, list, 0, 0);
-      }));
-    }
-  }
+  // getSharedData() async {
+  //   const platform = const MethodChannel('app.channel.shared.data');
+  //   Map sharedData = await platform.invokeMethod("getSharedData");
+  //   if (sharedData != null) {
+  //     if (sharedData["albumArt"] == "null") {
+  //       sharedData["albumArt"] = null;
+  //     }
+  //     Song song = new Song(
+  //         9999 /*random*/,
+  //         sharedData["artist"],
+  //         sharedData["title"],
+  //         sharedData["album"],
+  //         null,
+  //         int.parse(sharedData["duration"]),
+  //         sharedData["uri"],
+  //         sharedData["albumArt"]);
+  //     List<Song> list = new List();
+  //     list.add((song));
+  //     MyQueue.songs = list;
+  //     Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+  //       return new NowPlaying(null, list, 0, 0);
+  //     }));
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -141,10 +128,13 @@ class _musicState extends State<MusicHome> {
   }
 
   void getLast() async {
+    db = new DatabaseClient();
+    await db.create();
     last = await db.fetchLastSong();
     songs = await db.fetchSongs();
     setState(() {
       songs = songs;
+      isLoading = false;
     });
   }
 
@@ -185,23 +175,17 @@ class _musicState extends State<MusicHome> {
         floatingActionButton: new FloatingActionButton(
             child: new Icon(Icons.play_circle_filled),
             onPressed: () async {
-              var pref = await SharedPreferences.getInstance();
-              var fp = pref.getBool("played");
-              if (fp == null) {
-                scaffoldState.currentState.showSnackBar(
-                    new SnackBar(content: Text("Play your first song.")));
-              } else {
-               Navigator.of(context)
-                    .push(new MaterialPageRoute(builder: (context) {
-                  if (MyQueue.songs == null) {
-                    List<Song> list = new List();
-                    list.add(last);
-                    MyQueue.songs = list;
-                    return new NowPlaying(db, list, 0, 0);
-                  } else
-                    return new NowPlaying(db, MyQueue.songs, MyQueue.index, 1);
-                }));
-              }
+              Navigator.of(context)
+                  .push(new MaterialPageRoute(builder: (context) {
+                if (MyQueue.songs == null) {
+                  List<Song> list = new List();
+                  list.add(last);
+                  MyQueue.songs = list;
+                  return new NowPlaying(db, list, 0, 0);
+                } else
+                  return new NowPlaying(db, MyQueue.songs, MyQueue.index, 1);
+              }));
+              //}
             }),
         drawer: new Drawer(
           child: new Column(
@@ -262,7 +246,7 @@ class _musicState extends State<MusicHome> {
                 new FlatButton(
                   onPressed: () {
                     MyQueue.player.stop();
-                    Navigator.of(context).pop(true);
+                    SystemNavigator.pop();
                   },
                   child: new Text('Yes'),
                 ),

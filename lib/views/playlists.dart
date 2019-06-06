@@ -18,9 +18,9 @@ class _statePlaylist extends State<PlayList> {
   Orientation orientation;
   @override
   void initState() {
-    // TODO: implement initState
     mode = 1;
     selected = 1;
+    super.initState();
   }
 
   @override
@@ -40,8 +40,7 @@ class _statePlaylist extends State<PlayList> {
           title: new Text("Recently played"),
           subtitle: new Text("songs"),
           onTap: () {
-            Navigator
-                .of(context)
+            Navigator.of(context)
                 .push(new MaterialPageRoute(builder: (context) {
               return new ListSongs(widget.db, 1, orientation);
             }));
@@ -54,8 +53,7 @@ class _statePlaylist extends State<PlayList> {
           title: new Text("Top tracks"),
           subtitle: new Text("songs"),
           onTap: () {
-            Navigator
-                .of(context)
+            Navigator.of(context)
                 .push(new MaterialPageRoute(builder: (context) {
               return new ListSongs(widget.db, 2, orientation);
             }));
@@ -68,8 +66,7 @@ class _statePlaylist extends State<PlayList> {
           title: new Text("Favourites"),
           subtitle: new Text("Songs"),
           onTap: () {
-            Navigator
-                .of(context)
+            Navigator.of(context)
                 .push(new MaterialPageRoute(builder: (context) {
               return new ListSongs(widget.db, 3, orientation);
             }));

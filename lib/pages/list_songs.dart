@@ -43,8 +43,10 @@ class _listSong extends State<ListSongs> {
         songs = await widget.db.fetchTopSong();
         break;
       case 3:
-        songs = await widget.db.fetchFavSong();
-        break;
+        {
+          songs = await widget.db.fetchFavSong();
+          break;
+        }
       default:
         break;
     }
@@ -71,7 +73,6 @@ class _listSong extends State<ListSongs> {
 
   @override
   Widget build(BuildContext context) {
-    initSongs();
     return new Scaffold(
         appBar: widget.orientation == Orientation.portrait
             ? new AppBar(
@@ -84,7 +85,7 @@ class _listSong extends State<ListSongs> {
                   child: new CircularProgressIndicator(),
                 )
               : new ListView.builder(
-                  itemCount: songs.length,
+            itemCount: songs.length == null ? 0 : songs.length,
                   itemBuilder: (context, i) => new Column(
                         children: <Widget>[
                           /* new Divider(
@@ -124,6 +125,38 @@ class _listSong extends State<ListSongs> {
                               Navigator.of(context).push(new MaterialPageRoute(
                                   builder: (context) => new NowPlaying(
                                       widget.db, MyQueue.songs, i, 0)));
+                            },
+                            onLongPress: () {
+                              if (widget.mode == 3) {
+                                showDialog(
+                                  context: context,
+                                  child: new AlertDialog(
+                                    title: new Text(
+                                        'Are you sure want remove this from favourites?'),
+                                    content: new Text(songs[i].title),
+                                    actions: <Widget>[
+                                      new FlatButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(false),
+                                        child: new Text(
+                                          'No',
+                                        ),
+                                      ),
+                                      new FlatButton(
+                                        onPressed: () {
+                                          widget.db.removeFavSong(songs[i]);
+
+                                          setState(() {
+                                            songs.removeAt(i);
+                                          });
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: new Text('Yes'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ],

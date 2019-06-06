@@ -26,7 +26,6 @@ class stateCardDetail extends State<CardDetail> {
   var image;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initAlbum();
   }
@@ -69,7 +68,9 @@ class stateCardDetail extends State<CardDetail> {
                       fit: StackFit.expand,
                       children: <Widget>[
                         new Hero(
-                          tag: widget.mode == 0 ? widget.song.album : "",
+                          tag: widget.mode == 0
+                              ? widget.song.album
+                              : widget.song.artist,
                           child: image != null
                               ? new Image.file(
                                   image,

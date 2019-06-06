@@ -1,8 +1,10 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:musicplayer/database/database_client.dart';
 import 'package:musicplayer/pages/about.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:musicplayer/sc_model/model.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -14,22 +16,18 @@ class Settings extends StatefulWidget {
 class _settingState extends State<Settings> {
   var isLoading = false;
   var selected = 0;
-  void getheme() async {
-    var pref = await SharedPreferences.getInstance();
-    setState(() {
-      selected = pref.getInt("theme") == null ? 0 : pref.getInt("theme");
-    });
-  }
+  var db;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getheme();
+    db = DatabaseClient();
+    db.create();
   }
 
   @override
   GlobalKey<ScaffoldState> scaffoldState = new GlobalKey();
+
   Widget build(BuildContext context) {
     return new Scaffold(
       key: scaffoldState,
@@ -41,57 +39,63 @@ class _settingState extends State<Settings> {
           children: <Widget>[
             new ListTile(
                 leading:
-                    new Icon(Icons.style, color: Theme.of(context).accentColor),
+                new Icon(Icons.style, color: Theme.of(context).accentColor),
                 title: new Text(("Theme")),
-                onTap: () async {
-                 var result= showDialog(
+                onTap: () {
+                  showDialog(
                       context: context,
                       builder: (context) {
                         return new SimpleDialog(
                           title: new Text("Select theme"),
                           children: <Widget>[
-                            new RadioListTile(
-                              value: 0,
-                              groupValue: selected,
-                              onChanged: (value) {
-                                Navigator.pop(context,value);
+                            new ListTile(
+                              title: Text("Light"),
+                              onTap: () {
+                                DynamicTheme.of(context).setBrightness(
+                                    Theme
+                                        .of(context)
+                                        .brightness ==
+                                        Brightness.dark
+                                        ? Brightness.light
+                                        : Brightness.dark);
+                                ScopedModel.of<SongModel>(
+                                    context, rebuildOnChange: true)
+                                    .notifyListeners();
+
+                                Navigator.of(context).pop();
                               },
-                              title: new Text("Light"),
+                              trailing: Theme
+                                  .of(context)
+                                  .brightness ==
+                                  Brightness.light
+                                  ? Icon(Icons.check)
+                                  : null,
                             ),
-                            new RadioListTile(
-                              value: 1,
-                              groupValue: selected,
-                              onChanged: (value) {
-                                Navigator.pop(context,value);
+                            new ListTile(
+                              title: Text("Dark"),
+                              onTap: () {
+                                DynamicTheme.of(context).setBrightness(
+                                    Theme
+                                        .of(context)
+                                        .brightness ==
+                                        Brightness.dark
+                                        ? Brightness.light
+                                        : Brightness.dark);
+                                ScopedModel.of<SongModel>(
+                                    context, rebuildOnChange: true)
+                                    .notifyListeners();
+                                Navigator.of(context).pop();
                               },
-                              title: new Text("Dark"),
-                            )
+                              trailing: Theme
+                                  .of(context)
+                                  .brightness ==
+                                  Brightness.dark
+                                  ? Icon(Icons.check)
+                                  : null,
+                            ),
                           ],
                         );
                       });
-                  var pref = await SharedPreferences.getInstance();
-
-                  if (await result == null) {
-                    return;
-                  } else
-                    switch (await result) {
-                      case 1:
-                        {
-                          pref.setInt("theme", 1);
-                          scaffoldState.currentState.showSnackBar(new SnackBar(
-                              content: new Text(
-                                  "Changes will affect on next restart.")));
-                          break;
-                        }
-                      case 0:
-                        {
-                          pref.setInt("theme", 0);
-                          scaffoldState.currentState.showSnackBar(new SnackBar(
-                              content: new Text(
-                                  "Changes will affect on next restart.")));
-                          break;
-                        }
-                    }
                 }),
             new Divider(),
             new ListTile(
@@ -122,26 +126,26 @@ class _settingState extends State<Settings> {
             new Divider(),
             new ListTile(
               leading:
-                  new Icon(Icons.info, color: Theme.of(context).accentColor),
+              new Icon(Icons.info, color: Theme.of(context).accentColor),
               title: new Text("About"),
               onTap: () {
                 Navigator.push(context,
                     new MaterialPageRoute(builder: (context) {
-                  return new About();
-                }));
+                      return new About();
+                    }));
               },
             ),
             new Divider(),
             new Container(
                 child: isLoading
                     ? new Center(
-                        child: new Column(
-                          children: <Widget>[
-                            new CircularProgressIndicator(),
-                            new Text("Loading Songs"),
-                          ],
-                        ),
-                      )
+                  child: new Column(
+                    children: <Widget>[
+                      new CircularProgressIndicator(),
+                      new Text("Loading Songs"),
+                    ],
+                  ),
+                )
                     : new Container()),
           ],
         ),

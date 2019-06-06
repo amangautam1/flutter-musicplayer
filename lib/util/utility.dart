@@ -9,7 +9,6 @@ dynamic getImage(Song song) {
       ? null
       : new File.fromUri(Uri.parse(song.albumArt));
 }
-//var n=RawImage()
 
 Widget avatar(context, File f, String title) {
   return new Material(
