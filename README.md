@@ -43,7 +43,7 @@ Please <b>star</b> the repo up, if you like the work.
 <table>
   <tr>
     <td>
-      <img src="demo/now_palying.png" height=400 width=250/>
+      <img src="demo/now_playing.png" height=400 width=250/>
       Now playing
     </td>
     <td>
