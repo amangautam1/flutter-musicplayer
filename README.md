@@ -29,13 +29,9 @@ Please <b>star</b> the repo up, if you like the work.
 <li> Next/prev
 <li> Theme(dark/light)
 <li> Animations
-<li> Play from SD card
 <li> Awesome font
-
 <li> landscape mode supported 
- 
- <b>Things to be fixed</b>
- <li> Add to favourites
+<li> Add to favourites
   
 
   
@@ -47,11 +43,11 @@ Please <b>star</b> the repo up, if you like the work.
       Now playing
     </td>
     <td>
-      <img src="demo/home.png" height=400 width=250>
+      <img src="demo/home1.png" height=400 width=250>
       Home Screen
       </td>
       <td>
-      <img src="demo/dark_home.png" height=400 width=250>
+      <img src="demo/dark_home1.png" height=400 width=250>
      Dark Home Screen
       </td>
     </tr>
