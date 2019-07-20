@@ -6,6 +6,7 @@ class SongModel extends Model {
   List<Song> albums, recents, songs;
   Song last;
   Song top;
+  int mode = 2;
 
   Song get song => _song;
 
@@ -14,6 +15,11 @@ class SongModel extends Model {
     recents = await db.fetchRecentSong();
     //recents.removeAt(0);
     top = await db.fetchTopSong().then((item) => item[0]);
+    notifyListeners();
+  }
+
+  void setMode(int mode) {
+    this.mode = mode;
     notifyListeners();
   }
 

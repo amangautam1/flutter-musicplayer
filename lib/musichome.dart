@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:musicplayer/database/database_client.dart';
+import 'package:musicplayer/pages/about.dart';
 import 'package:musicplayer/pages/material_search.dart';
 import 'package:musicplayer/pages/now_playing.dart';
 import 'package:musicplayer/pages/settings.dart';
@@ -13,6 +15,8 @@ import 'package:musicplayer/views/artists.dart';
 import 'package:musicplayer/views/home.dart';
 import 'package:musicplayer/views/playlists.dart';
 import 'package:musicplayer/views/songs.dart';
+import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MusicHome extends StatefulWidget {
   List<Song> songs;
@@ -38,8 +42,6 @@ class _musicState extends State<MusicHome> {
   bool isLoading = true;
   Song last;
   Color color = Colors.deepPurple;
-  var themeLoading = true;
-
   getDrawerItemWidget(int pos) {
     switch (pos) {
       case 0:
@@ -69,6 +71,10 @@ class _musicState extends State<MusicHome> {
     getLast();
   }
 
+  @override
+  void dispose() async {
+    super.dispose();
+  }
 
   // void initPlayer() async {
   //   db = new DatabaseClient();
@@ -83,7 +89,7 @@ class _musicState extends State<MusicHome> {
   //     try {
   //       songs = await MusicFinder.allSongs();
   //     } catch (e) {
-  //       print("failed to get songs");
+  //       //"failed to get songs");
   //     }
   //     List<Song> list = new List.from(songs);
   //     for (Song song in list) db.upsertSOng(song);
@@ -121,11 +127,6 @@ class _musicState extends State<MusicHome> {
   //     }));
   //   }
   // }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   void getLast() async {
     db = new DatabaseClient();
@@ -188,26 +189,87 @@ class _musicState extends State<MusicHome> {
               //}
             }),
         drawer: new Drawer(
-          child: new Column(
-            children: <Widget>[
-              new UserAccountsDrawerHeader(
-                  accountName: new Text("Music player"), accountEmail: null),
-              new Column(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.settings,
-                          color: Theme.of(context).accentColor),
-                      title: new Text("Settings"),
+          child: SingleChildScrollView(
+            child: new Column(
+              children: <Widget>[
+                new UserAccountsDrawerHeader(
+                  accountName: new Text("Music player"),
+                  accountEmail: null,
+                  currentAccountPicture: CircleAvatar(
+                    child: Image.asset("images/logo.png"),
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+                new Column(
+                  children: <Widget>[
+                    new ListTile(
+                        leading: new Icon(Icons.settings,
+                            color: Theme
+                                .of(context)
+                                .accentColor),
+                        title: new Text("Settings"),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context)
+                              .push(new MaterialPageRoute(builder: (context) {
+                            return new Settings();
+                          }));
+                        }),
+                    new ListTile(
+                      leading: new Icon(Icons.info,
+                          color: Theme
+                              .of(context)
+                              .accentColor),
+                      title: new Text("About"),
                       onTap: () {
                         Navigator.of(context).pop();
-                        Navigator.of(context)
-                            .push(new MaterialPageRoute(builder: (context) {
-                          return new Settings();
-                        }));
-                      }),
-                ],
-              )
-            ],
+                        Navigator.push(context,
+                            new MaterialPageRoute(builder: (context) {
+                              return new About();
+                            }));
+                      },
+                    ),
+                    Divider(),
+                    new ListTile(
+                      leading: Icon(Icons.share,
+                          color: Theme
+                              .of(context)
+                              .accentColor),
+                      title: Text("Share"),
+                      onTap: () {
+                        Share.share(
+                            "Hey, checkout this cool music player at https://play.google.com/store/apps/details?id=com.onedreamers.musicplayer");
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    new ListTile(
+                      leading: Icon(Icons.star,
+                          color: Theme
+                              .of(context)
+                              .accentColor),
+                      title: Text("Rate the app"),
+                      onTap: () {
+                        Navigator.of(context).pop();
+
+                        launchUrl(
+                            "https://play.google.com/store/apps/details?id=com.onedreamers.musicplayer");
+                      },
+                    ),
+                    new ListTile(
+                      leading: Icon(FontAwesomeIcons.donate,
+                          color: Theme
+                              .of(context)
+                              .accentColor),
+                      title: Text("Donate"),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        launchUrl("http://paypal.me/amangautam1");
+                      },
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ),
         body: isLoading
@@ -254,6 +316,14 @@ class _musicState extends State<MusicHome> {
             ),
           ) ??
           false;
+  }
+
+  launchUrl(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'could not open';
+    }
   }
 }
 

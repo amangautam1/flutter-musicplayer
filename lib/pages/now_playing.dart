@@ -1,14 +1,15 @@
 import 'dart:async';
+
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:media_notification/media_notification.dart';
 import 'package:musicplayer/database/database_client.dart';
 import 'package:musicplayer/sc_model/model.dart';
 import 'package:musicplayer/util/lastplay.dart';
 import 'package:musicplayer/util/utility.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/services.dart';
-import 'package:media_notification/media_notification.dart';
 
 class NowPlaying extends StatefulWidget {
   int mode;
@@ -149,16 +150,16 @@ class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
     song = widget.songs[index];
     widget.index = index;
     song.timestamp = new DateTime.now().millisecondsSinceEpoch;
-    print("count=${song.count}");
 
     // if (widget.db != null && song.id != 9999 /*shared song id*/)
       widget.db.updateSong(song);
 
     player.play(song.uri);
+    show(song.title, song.artist);
     ScopedModel.of<SongModel>(context).updateUI(song, widget.db);
 
     animateReverse();
-    show(song.title, song.artist);
+
     setState(() {
       isPlaying = true;
       isfav = song.isFav;
@@ -185,12 +186,10 @@ class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
         isPlaying = true;
       });
     }
-    print('Status: ' + status);
   }
 
   Future next() async {
     player.stop();
-    print(widget.index);
     setState(() {
       int i = ++widget.index;
       if (i >= widget.songs.length) {
@@ -219,6 +218,11 @@ class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
     next();
   }
 
+  @override
+  void dispose() async {
+    super.dispose();
+    await MediaNotification.hide();
+  }
   GlobalKey<ScaffoldState> scaffoldState = new GlobalKey();
 
   @override
@@ -253,47 +257,68 @@ class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
     showModalBottomSheet(
         context: context,
         builder: (builder) {
-          return new Container(
-              height: 450.0,
-              child: new ListView.builder(
-                itemCount: widget.songs.length,
-                itemBuilder: (context, i) => new Column(
-                      children: <Widget>[
-                        new Divider(
-                          height: 8.0,
-                        ),
-                        new ListTile(
-                          leading: avatar(context, getImage(widget.songs[i]),
-                              widget.songs[i].title),
-                          title: new Text(widget.songs[i].title,
+          return Container(
+            height: MediaQuery
+                .of(context)
+                .size
+                .height / 1.8,
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Icon(Icons.list, size: 30,),
+                    Text("Playing Queue", style: TextStyle(fontSize: 25,),
+                      textAlign: TextAlign.right,),
+                    Expanded(child: Text(
+                      "${widget.index + 1}/${widget.songs.length} song(s)",
+                      textAlign: TextAlign.right,))
+                  ],
+                ),
+                new Expanded(
+                    child: new ListView.builder(
+                      itemCount: widget.songs.length,
+                      itemBuilder: (context, i) =>
+                      new Column(
+                        children: <Widget>[
+
+                          new ListTile(
+                            leading: avatar(context, getImage(widget.songs[i]),
+                                widget.songs[i].title),
+                            title: new Text(widget.songs[i].title,
+                                maxLines: 1,
+                                style: new TextStyle(fontSize: 18.0)),
+                            subtitle: new Text(
+                              widget.songs[i].artist,
                               maxLines: 1,
-                              style: new TextStyle(fontSize: 18.0)),
-                          subtitle: new Text(
-                            widget.songs[i].artist,
-                            maxLines: 1,
-                            style: new TextStyle(
-                                fontSize: 12.0, color: Colors.grey),
+                              style: new TextStyle(
+                                  fontSize: 12.0, color: Colors.grey),
+                            ),
+                            trailing: song.id == widget.songs[i].id
+                                ? new Icon(
+                              Icons.play_circle_filled,
+                              color: Colors.deepPurple,
+                            )
+                                : new Text(
+                              (i + 1).toString(),
+                              style: new TextStyle(
+                                  fontSize: 12.0, color: Colors.grey),
+                            ),
+                            onTap: () {
+                              player.stop();
+                              updatePage(i);
+
+                              Navigator.pop(context);
+                            },
                           ),
-                          trailing: song.id == widget.songs[i].id
-                              ? new Icon(
-                                  Icons.play_circle_filled,
-                                  color: Colors.deepPurple,
-                                )
-                              : new Text(
-                                  (i + 1).toString(),
-                                  style: new TextStyle(
-                                      fontSize: 12.0, color: Colors.grey),
-                                ),
-                          onTap: () {
-                            player.stop();
-                            updatePage(i);
-                            print(i);
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                    ),
-              ));
+                          new Divider(
+                            height: 8.0,
+                          ),
+                        ],
+                      ),
+                    )),
+              ],
+            ),
+          );
         });
   }
 
@@ -302,8 +327,15 @@ class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
       // color: Colors.transparent,
       child: song == null ? Container() : new Column(
         children: <Widget>[
-          new AspectRatio(
-            aspectRatio: 15 / 15,
+          new Container(
+            height: MediaQuery
+                .of(context)
+                .size
+                .height / 1.8,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             child: new Hero(
               tag: song.id,
               child: getImage(song) != null
@@ -313,7 +345,7 @@ class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
                     )
                   : new Image.asset(
                       "images/back.jpg",
-                      fit: BoxFit.fitHeight,
+                fit: BoxFit.cover,
                     ),
             ),
           ),
@@ -436,9 +468,14 @@ class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
     return song == null ? Container() : new Row(
       children: <Widget>[
         new Container(
-          width: 350.0,
-          child: new AspectRatio(
-              aspectRatio: 15 / 19,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width / 1.9,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
               child: new Hero(
                 tag: song.id,
                 child: getImage(song) != null
@@ -450,7 +487,7 @@ class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
                         "images/back.jpg",
                         fit: BoxFit.fitHeight,
                       ),
-              )),
+              ),
         ),
         new Expanded(
           child: new Column(
@@ -573,6 +610,5 @@ class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
 
   Future<void> setFav(song) async {
     var i = await widget.db.favSong(song);
-    print(i);
   }
 }

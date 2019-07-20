@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:musicplayer/database/database_client.dart';
@@ -38,9 +39,9 @@ class stateHome extends State<Home> {
     recents = await widget.db.fetchRecentSong();
     recents.removeAt(0);
     top = await widget.db.fetchTopSong().then((item) => item[0]);
-    ScopedModel
-        .of<SongModel>(context, rebuildOnChange: true)
-        .recents = recents;
+    // ScopedModel
+    //     .of<SongModel>(context, rebuildOnChange: true)
+    //     .recents = recents;
     ScopedModel.of<SongModel>(context, rebuildOnChange: true).init(widget.db);
 
     setState(() {
@@ -107,9 +108,11 @@ class stateHome extends State<Home> {
                   new Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
+
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      elevation: 2,
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      elevation: 1,
+                      // onPressed: (){},
                       child: new Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,

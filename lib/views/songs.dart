@@ -47,48 +47,76 @@ class _songsState extends State<Songs> {
             ? new Center(
                 child: new CircularProgressIndicator(),
               )
-            : new ListView.builder(
-                itemCount: songs.length,
-                itemBuilder: (context, i) => new Column(
-                      children: <Widget>[
-                        new Divider(
-                          height: 8.0,
-                        ),
-                        new ListTile(
-                          leading: new Hero(
-                            tag: songs[i].id,
-                            child: avatar(
-                                context, getImage(songs[i]), songs[i].title),
-                          ),
-                          title: new Text(songs[i].title,
-                              maxLines: 1,
-                              style: new TextStyle(fontSize: 18.0)),
-                          subtitle: new Text(
-                            songs[i].artist,
-                            maxLines: 1,
-                            style: new TextStyle(
-                                fontSize: 12.0, color: Colors.grey),
-                          ),
-                          trailing: new Text(
-                              new Duration(milliseconds: songs[i].duration)
-                                  .toString()
-                                  .split('.')
-                                  .first,
-                              style: new TextStyle(
-                                  fontSize: 12.0, color: Colors.grey)),
-                          onTap: () {
-                            MyQueue.songs = songs;
-                            Navigator.of(context).push(new MaterialPageRoute(
-                                builder: (context) => new NowPlaying(
-                                    widget.db, MyQueue.songs, i, 0)));
-                          },
-                          onLongPress: () {
-                            setFav(songs[i]);
-                          },
-                        ),
-                      ],
+            : Column(children: <Widget>[
+          SizedBox(
+            width: MediaQuery
+                .of(context)
+                .size
+                .width - 20,
+            child: OutlineButton(
+
+                child: Text("Play All", style: TextStyle(
+                    fontSize: 20
+                ),),
+                onPressed: () {
+                  MyQueue.songs = songs;
+                  Navigator.of(context)
+                      .push(new MaterialPageRoute(builder: (context) {
+                    return new NowPlaying(widget.db, songs, 0, 0);
+                  }));
+                },
+                shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(30.0),
+                )),
+          ),
+          Expanded(
+            child: new ListView.builder(
+              itemCount: songs.length,
+              itemBuilder: (context, i) =>
+              new Column(
+                children: <Widget>[
+                  new Divider(
+                    height: 8.0,
+                  ),
+                  new ListTile(
+                    leading: new Hero(
+                      tag: songs[i].id,
+                      child: avatar(context, getImage(songs[i]),
+                          songs[i].title),
                     ),
-              ));
+                    title: new Text(songs[i].title,
+                        maxLines: 1,
+                        style: new TextStyle(fontSize: 18.0)),
+                    subtitle: new Text(
+                      songs[i].artist,
+                      maxLines: 1,
+                      style: new TextStyle(
+                          fontSize: 12.0, color: Colors.grey),
+                    ),
+                    trailing: new Text(
+                        new Duration(milliseconds: songs[i].duration)
+                            .toString()
+                            .split('.')
+                            .first,
+                        style: new TextStyle(
+                            fontSize: 12.0, color: Colors.grey)),
+                    onTap: () {
+                      MyQueue.songs = songs;
+                      Navigator.of(context).push(
+                          new MaterialPageRoute(
+                              builder: (context) =>
+                              new NowPlaying(
+                                  widget.db, MyQueue.songs, i, 0)));
+                    },
+                    onLongPress: () {
+                      setFav(songs[i]);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          )
+        ]));
   }
 
   Future<void> setFav(song) {

@@ -2,9 +2,6 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:musicplayer/database/database_client.dart';
-import 'package:musicplayer/pages/about.dart';
-import 'package:scoped_model/scoped_model.dart';
-import 'package:musicplayer/sc_model/model.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -52,16 +49,9 @@ class _settingState extends State<Settings> {
                               title: Text("Light"),
                               onTap: () {
                                 DynamicTheme.of(context).setBrightness(
-                                    Theme
-                                        .of(context)
-                                        .brightness ==
-                                        Brightness.dark
-                                        ? Brightness.light
-                                        : Brightness.dark);
-                                ScopedModel.of<SongModel>(
-                                    context, rebuildOnChange: true)
-                                    .notifyListeners();
-
+                                    Brightness.light
+                                );
+                              
                                 Navigator.of(context).pop();
                               },
                               trailing: Theme
@@ -75,15 +65,8 @@ class _settingState extends State<Settings> {
                               title: Text("Dark"),
                               onTap: () {
                                 DynamicTheme.of(context).setBrightness(
-                                    Theme
-                                        .of(context)
-                                        .brightness ==
-                                        Brightness.dark
-                                        ? Brightness.light
-                                        : Brightness.dark);
-                                ScopedModel.of<SongModel>(
-                                    context, rebuildOnChange: true)
-                                    .notifyListeners();
+                                    Brightness.dark);
+                          
                                 Navigator.of(context).pop();
                               },
                               trailing: Theme
@@ -103,7 +86,7 @@ class _settingState extends State<Settings> {
                 Icons.build,
                 color: Theme.of(context).accentColor,
               ),
-              title: new Text("Rebuild database"),
+              title: new Text("Re-scan/Reset Media"),
               onTap: () async {
                 setState(() {
                   isLoading = true;
@@ -124,18 +107,8 @@ class _settingState extends State<Settings> {
               },
             ),
             new Divider(),
-            new ListTile(
-              leading:
-              new Icon(Icons.info, color: Theme.of(context).accentColor),
-              title: new Text("About"),
-              onTap: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) {
-                      return new About();
-                    }));
-              },
-            ),
-            new Divider(),
+
+
             new Container(
                 child: isLoading
                     ? new Center(

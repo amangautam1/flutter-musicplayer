@@ -1,17 +1,17 @@
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:musicplayer/database/database_client.dart';
 import 'package:musicplayer/musichome.dart';
+import 'package:musicplayer/pages/NoMusicFound.dart';
 
-class TestScreen extends StatefulWidget {
+class SplashScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return new WalkState();
+    return new SplashState();
   }
 }
 
-class WalkState extends State<TestScreen> {
+class SplashState extends State<SplashScreen> {
   var db;
   var isLoading = false;
 
@@ -35,7 +35,8 @@ class WalkState extends State<TestScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Icon(Icons.queue_music, color: Colors.white, size: 100.0),
+                    Image.asset("images/kid.png", height: 200, width: 200,
+                      fit: BoxFit.cover,),
                   ],
                 ),
                 Container(
@@ -49,17 +50,17 @@ class WalkState extends State<TestScreen> {
                     ),
                   ),
                 ),
-                isLoading ? CircularProgressIndicator() : Container(),
+
                 Expanded(
-                  child: Container(),
+                  child: Center(
+                    child: isLoading ? CircularProgressIndicator(
+                      backgroundColor: Colors.white,
+                    ) : Container(),
                 ),
-                Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text(
-                    "Wait...",
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
                 ),
+                Text("Setting up...",
+                    style: TextStyle(color: Colors.white, fontSize: 20))
+               
               ],
             ),
           ),
@@ -82,26 +83,25 @@ class WalkState extends State<TestScreen> {
       try {
         songs = await MusicFinder.allSongs();
         List<Song> list = new List.from(songs);
+
         if (list == null || list.length == 0) {
-          Scaffold.of(context).showSnackBar(new SnackBar(
-              content: new Row(
-            children: <Widget>[
-              Text("No songs found"),
-              FlatButton(
-                child: Text("Ok"),
-                onPressed: () => {SystemNavigator.pop()},
-              )
-            ],
-          )));
+          print("List-> $list");
+          Navigator.of(context).pop(true);
+          Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+            return new NoMusicFound();
+          }));
         }
-        for (Song song in list) db.upsertSOng(song);
-        if (!mounted) {
-          return;
+        else {
+          for (Song song in list)
+            db.upsertSOng(song);
+          if (!mounted) {
+            return;
+          }
+          Navigator.of(context).pop(true);
+          Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+            return new MusicHome();
+          }));
         }
-        Navigator.of(context).pop(true);
-        Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
-          return new MusicHome();
-        }));
       } catch (e) {
         print("failed to get songs");
       }

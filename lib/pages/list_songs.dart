@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:musicplayer/database/database_client.dart';
@@ -22,11 +20,6 @@ class ListSongs extends StatefulWidget {
 class _listSong extends State<ListSongs> {
   List<Song> songs;
   bool isLoading = true;
-  dynamic getImage(Song song) {
-    return song.albumArt == null
-        ? null
-        : new File.fromUri(Uri.parse(song.albumArt));
-  }
 
   @override
   void initState() {
@@ -40,8 +33,10 @@ class _listSong extends State<ListSongs> {
         songs = await widget.db.fetchRecentSong();
         break;
       case 2:
-        songs = await widget.db.fetchTopSong();
-        break;
+        {
+          songs = await widget.db.fetchTopSong();
+          break;
+        }
       case 3:
         {
           songs = await widget.db.fetchFavSong();
@@ -50,6 +45,7 @@ class _listSong extends State<ListSongs> {
       default:
         break;
     }
+
     setState(() {
       isLoading = false;
     });
@@ -74,11 +70,14 @@ class _listSong extends State<ListSongs> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: widget.orientation == Orientation.portrait
-            ? new AppBar(
+      // appBar: widget.orientation == Orientation.portrait
+      //     ? new AppBar(
+      //         title: getTitle(widget.mode),
+      //       )
+      //     : null,
+        appBar: new AppBar(
                 title: getTitle(widget.mode),
-              )
-            : null,
+        ),
         body: new Container(
           child: isLoading
               ? new Center(

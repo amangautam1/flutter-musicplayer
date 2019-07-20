@@ -11,16 +11,26 @@ dependencies:
   flute_music_player:
   sqflite:
   path_provider:
-  material_search: ^0.2.7
   url_launcher: 3.0.1
   shared_preferences: 
   media_notification: ^0.0.5
   dynamic_theme: ^1.0.1
   scoped_model: 
+  share: ^0.6.1+1
+  font_awesome_flutter:
+  floating_search_bar:
+
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: 
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "images/logo.png"
 
 
 # For information on the generic Dart part of this file, see the
@@ -32,6 +42,10 @@ flutter:
     - images/back.jpg
     - images/avatar.jpg
     - images/artist.jpg
+    - images/logo.png
+    - images/logo_white.png
+    - images/kid.png
+    - images/sad.png
 
   fonts:
       - family: Raleway
@@ -39,6 +53,7 @@ flutter:
           - asset: fonts/Raleway-Regular.ttf
           - asset: fonts/Raleway-Italic.ttf
             style: italic
+     
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

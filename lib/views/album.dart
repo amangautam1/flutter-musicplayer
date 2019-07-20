@@ -62,17 +62,14 @@ class _stateAlbum extends State<Album> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        song.album,
-                        style: new TextStyle(fontSize: 18.0),
-                        maxLines: 1,
+                      Flexible(
+                        child: Text(
+                          song.album,
+                          style: new TextStyle(fontSize: 18.0),
+                          maxLines: 2,
+                        ),
                       ),
-                      SizedBox(height: 8.0),
-                      Text(
-                        song.artist,
-                        maxLines: 1,
-                        style: TextStyle(fontSize: 14.0, color: Colors.grey),
-                      )
+                      
                     ],
                   ),
                 ),

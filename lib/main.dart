@@ -22,10 +22,11 @@ class MyApp extends StatelessWidget {
           return ScopedModel<SongModel>(
             model: new SongModel(),
             child: new MaterialApp(
+
               title: 'Music Player',
               theme: theme,
               debugShowCheckedModeBanner: false,
-              home: new TestScreen(),
+              home: new SplashScreen(),
             ),
           );
         });
