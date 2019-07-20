@@ -22,20 +22,15 @@ Please <b>star</b> the repo up, if you like the work.
 <li> Album view
 <li> Artist view
 <li> Playlist
-<li> Add to favourite
 <li> Shuffle
 <li> Playing queue
 <li> Play/pause
 <li> Next/prev
 <li> Theme(dark/light)
 <li> Animations
-<li> Play from SD card
 <li> Awesome font
-
 <li> landscape mode supported 
- 
- <b>Things to be fixed</b>
- <li> Add to favourites
+<li> Add to favourites
   
 
   
@@ -43,15 +38,16 @@ Please <b>star</b> the repo up, if you like the work.
 <table>
   <tr>
     <td>
-      <img src="demo/now_palying.png" height=400 width=250/>
+      <img src="demo/now_playing.png" height=400 width=250/>
       Now playing
     </td>
     <td>
-      <img src="demo/home.png" height=400 width=250>
+      <img src="demo/home1.png" height=400 width=250>
       Home Screen
       </td>
       <td>
-      <img src="demo/dark_home.png" height=400 width=250>
+      <img src="demo/dark_home1.png" height=400 width=250>
+        <br>
      Dark Home Screen
       </td>
     </tr>
@@ -134,8 +130,3 @@ SOFTWARE.
 For help getting started with Flutter, view our online
 [documentation](https://flutter.io/).
 
-
-## Support on Beerpay
-Hey dude! Help me out for a couple of :beers:!
-
-[![Beerpay](https://beerpay.io/amangautam1/flutter-musicplayer/badge.svg?style=beer-square)](https://beerpay.io/amangautam1/flutter-musicplayer)  [![Beerpay](https://beerpay.io/amangautam1/flutter-musicplayer/make-wish.svg?style=flat-square)](https://beerpay.io/amangautam1/flutter-musicplayer?focus=wish)
