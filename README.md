@@ -32,7 +32,7 @@ Please <b>star</b> the repo up, if you like the work.
 <li> landscape mode supported 
 <li> Add to favourites
 
-#Video
+# Video
 [![Watch the video](https://img.youtube.com/vi/EfB_0vKdSAE/hqdefault.jpg)](https://youtu.be/EfB_0vKdSAE)
 
   
