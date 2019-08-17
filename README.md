@@ -31,7 +31,9 @@ Please <b>star</b> the repo up, if you like the work.
 <li> Awesome font
 <li> landscape mode supported 
 <li> Add to favourites
-  
+
+#Video
+[![Watch the video](https://img.youtube.com/vi/EfB_0vKdSAE/hqdefault.jpg)](https://youtu.be/EfB_0vKdSAE)
 
   
 # Screenshots
@@ -51,7 +53,7 @@ Please <b>star</b> the repo up, if you like the work.
      Dark Home Screen
       </td>
     </tr>
-  <tr>
+<!--   <tr>
       <td>
       <img src="demo/album.png" height=400 width=250>
       Album
@@ -92,7 +94,7 @@ Please <b>star</b> the repo up, if you like the work.
       <img src="demo/landscape.png" height=250 width=400>
       Landscape mode
     </td>
-  </tr>
+  </tr> -->
   </table>
 
 # Plugins
