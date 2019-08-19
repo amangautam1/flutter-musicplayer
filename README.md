@@ -11,28 +11,18 @@ Please <b>star</b> the repo up, if you like the work.
 
 # Features
 <li> Play local songs
-<li> Beautiful Home screen
-<li> Beautiful Now Playing
+<li> Beautiful screens
 <li> Sqlite database support
-<li> Search songs
-<li> Songs suggestions
-<li> Top tracks
-<li> Recent songs
-<li> Random song
-<li> Album view
-<li> Artist view
-<li> Playlist
-<li> Shuffle
-<li> Playing queue
-<li> Play/pause
-<li> Next/prev
-<li> Theme(dark/light)
-<li> Animations
-<li> Awesome font
-<li> landscape mode supported 
-<li> Add to favourites
+<li> Search songs, Songs suggestions
+<li> Top tracks, Recent songs, Random song
+<li> Album view, Artist view
+<li> Playing queue, Shuffle, Add to favourites
+<li> Play/pause, Next/prev
+<li> Themes(dark/light), Custom font, Animations
+<li> landscape mode
 
 # Video
+Catch the demo in this video.<br>
 [![Watch the video](https://img.youtube.com/vi/EfB_0vKdSAE/hqdefault.jpg)](https://youtu.be/EfB_0vKdSAE)
 
   
