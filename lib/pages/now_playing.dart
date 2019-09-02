@@ -130,11 +130,6 @@ class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
         }));
     player.setCompletionHandler(() {
       onComplete();
-      setState(() {
-        position = duration;
-        int i = ++widget.index;
-        song = widget.songs[i];
-      });
     });
     player.setErrorHandler((msg) {
       setState(() {
@@ -380,6 +375,7 @@ class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
               child: new Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+
                   new Text(
                     song.title,
                     maxLines: 1,
@@ -387,6 +383,7 @@ class _stateNowPlaying extends State<NowPlaying> with TickerProviderStateMixin {
                     style: new TextStyle(
                         fontSize: 20.0, fontWeight: FontWeight.bold),
                   ),
+
                   new Text(
                     song.artist,
                     maxLines: 1,

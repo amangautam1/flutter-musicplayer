@@ -46,6 +46,21 @@ class DatabaseClient {
     return id;
   }
 
+  Future<int> updateList(Song song) async {
+    song.count = 0;
+    song.timestamp = new DateTime.now().millisecondsSinceEpoch;
+    ;
+    song.isFav = 0;
+
+    int id = 0;
+    var count = Sqflite.firstIntValue(await _db
+        .rawQuery("SELECT COUNT(*) FROM songs WHERE title = ?", [song.title]));
+    if (count == 0) {
+      id = await _db.insert("songs", song.toMap());
+    }
+    return id;
+  }
+
   Future<bool> alreadyLoaded() async {
     var count =
         Sqflite.firstIntValue(await _db.rawQuery("SELECT COUNT(*) FROM songs"));

@@ -100,7 +100,8 @@ class _settingState extends State<Settings> {
                   print("failed to get songs");
                 }
                 List<Song> list = new List.from(songs);
-                for (Song song in list) db.upsertSOng(song);
+                for (Song song in list)
+                  db.updateList(song);
                 setState(() {
                   isLoading = false;
                 });

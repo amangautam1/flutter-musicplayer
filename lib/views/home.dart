@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:musicplayer/database/database_client.dart';
@@ -108,7 +109,6 @@ class stateHome extends State<Home> {
                   new Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
-
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       elevation: 1,
@@ -129,18 +129,26 @@ class stateHome extends State<Home> {
                               ScopedModelDescendant<SongModel>(
                                   builder: (context, child, model) {
                                     return Flexible(
-                                      child: new Text(
-                                        model.song == null
-                                            ? last.title + " By " + last.artist
-                                            : model.song.title +
-                                            " By " +
+                                      child: RotateAnimatedTextKit(
+
+
+                                          text: model.song == null
+                                              ? [
+                                            "One good thing about music, when it hits you, you feel no pain.",
+                                            "Music is the strongest form of magic.",
+                                            "Music is an outburst of the soul"
+                                          ]
+                                              : [
+                                            model.song.title,
                                             model.song.artist,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 3,
-                                        style: new TextStyle(
-                                          fontStyle: FontStyle.italic,
-                                          fontSize: 17.0,
-                                        ),
+                                            model.song.album
+                                          ],
+                                          textStyle: TextStyle(
+                                            fontSize: 17.0,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                          alignment: AlignmentDirectional
+                                              .topStart // or Alignment.topLeft
                                       ),
                                     );
                                   }),
@@ -255,7 +263,7 @@ class stateHome extends State<Home> {
                     padding:
                         const EdgeInsets.only(left: 8.0, top: 8.0, bottom: 8.0),
                     child: new Text(
-                      "Most played!",
+                      "Trending!",
                       style: new TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20.0,
@@ -357,61 +365,60 @@ class stateHome extends State<Home> {
         itemCount: albums.length,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, i) => new Card(
-              child: new InkResponse(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                        child: new Hero(
+          child: new InkResponse(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                    child: new Hero(
                       tag: albums[i].album,
                       child: getImage(albums[i]) != null
                           ? new Image.file(
-                              getImage(albums[i]),
-                              height: 120.0,
-                              width: 200.0,
-                              fit: BoxFit.cover,
-                            )
+                        getImage(albums[i]),
+                        height: 120.0,
+                        width: 200.0,
+                        fit: BoxFit.cover,
+                      )
                           : new Image.asset(
-                              "images/back.jpg",
-                              height: 120.0,
-                              width: 200.0,
-                              fit: BoxFit.cover,
-                            ),
-                    )),
-                    SizedBox(
-                      width: 200.0,
-                      child: Padding(
-                        // padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                        padding: EdgeInsets.fromLTRB(4.0, 8.0, 0.0, 0.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              albums[i].album,
-                              style: new TextStyle(fontSize: 18.0),
-                              maxLines: 1,
-                            ),
-                            SizedBox(height: 8.0),
-                            Text(
-                              albums[i].artist,
-                              maxLines: 1,
-                              style:
-                                  TextStyle(fontSize: 14.0, color: Colors.grey),
-                            )
-                          ],
-                        ),
+                        "images/back.jpg",
+                        height: 120.0,
+                        width: 200.0,
+                        fit: BoxFit.cover,
                       ),
+                    )),
+                SizedBox(
+                  width: 200.0,
+                  child: Padding(
+                    // padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                    padding: EdgeInsets.fromLTRB(4.0, 8.0, 0.0, 0.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          albums[i].album,
+                          style: new TextStyle(fontSize: 18.0),
+                          maxLines: 1,
+                        ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          albums[i].artist,
+                          maxLines: 1,
+                          style: TextStyle(fontSize: 14.0, color: Colors.grey),
+                        )
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-                onTap: () {
-                  Navigator.of(context)
-                      .push(new MaterialPageRoute(builder: (context) {
-                    return new CardDetail(widget.db, albums[i], 0);
-                  }));
-                },
-              ),
+              ],
             ),
+            onTap: () {
+              Navigator.of(context)
+                  .push(new MaterialPageRoute(builder: (context) {
+                return new CardDetail(widget.db, albums[i], 0);
+              }));
+            },
+          ),
+        ),
       ),
     );
   }

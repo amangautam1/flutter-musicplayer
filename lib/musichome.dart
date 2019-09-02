@@ -17,7 +17,6 @@ import 'package:musicplayer/views/playlists.dart';
 import 'package:musicplayer/views/songs.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 class MusicHome extends StatefulWidget {
   List<Song> songs;
   MusicHome();
@@ -42,6 +41,8 @@ class _musicState extends State<MusicHome> {
   bool isLoading = true;
   Song last;
   Color color = Colors.deepPurple;
+
+
   getDrawerItemWidget(int pos) {
     switch (pos) {
       case 0:
@@ -71,38 +72,11 @@ class _musicState extends State<MusicHome> {
     getLast();
   }
 
+
   @override
   void dispose() async {
     super.dispose();
   }
-
-  // void initPlayer() async {
-  //   db = new DatabaseClient();
-  //   await db.create();
-  //   if (await db.alreadyLoaded()) {
-  //     setState(() {
-  //       isLoading = false;
-  //       getLast();
-  //     });
-  //   } else {
-  //     var songs;
-  //     try {
-  //       songs = await MusicFinder.allSongs();
-  //     } catch (e) {
-  //       //"failed to get songs");
-  //     }
-  //     List<Song> list = new List.from(songs);
-  //     for (Song song in list) db.upsertSOng(song);
-  //     if (!mounted) {
-  //       return;
-  //     }
-  //     setState(() {
-  //       isLoading = false;
-  //       getLast();
-  //     });
-  //   }
-  // }
-
   // getSharedData() async {
   //   const platform = const MethodChannel('app.channel.shared.data');
   //   Map sharedData = await platform.invokeMethod("getSharedData");
@@ -276,12 +250,17 @@ class _musicState extends State<MusicHome> {
             ? new Center(
                 child: new CircularProgressIndicator(),
               )
-            : getDrawerItemWidget(_selectedDrawerIndex),
-        bottomNavigationBar: new BottomNavigationBar(
+            : Padding(
+          padding: EdgeInsets.only(bottom: 0),
+          child: getDrawerItemWidget(_selectedDrawerIndex),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
           items: bottomOptions,
           onTap: (index) => _onSelectItem(index),
           currentIndex: _selectedDrawerIndex,
         ),
+
+
       ),
       onWillPop: _onWillPop,
     );
@@ -317,6 +296,7 @@ class _musicState extends State<MusicHome> {
           ) ??
           false;
   }
+
 
   launchUrl(url) async {
     if (await canLaunch(url)) {

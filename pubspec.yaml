@@ -19,8 +19,10 @@ dependencies:
   share: ^0.6.1+1
   font_awesome_flutter:
   floating_search_bar:
-
-  
+  firebase_admob: ^0.9.0+2
+  clippy_flutter:
+  animated_text_kit: ^1.3.1
+  indexed_list_view: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +48,8 @@ flutter:
     - images/logo_white.png
     - images/kid.png
     - images/sad.png
+    - images/micra.jpg
+
 
   fonts:
       - family: Raleway

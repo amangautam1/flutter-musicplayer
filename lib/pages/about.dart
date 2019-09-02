@@ -73,73 +73,85 @@ class About extends StatelessWidget {
                     ),
                   ),
                   Card(
-                    child: Column(
+                    child: Stack(
                       children: <Widget>[
-                        Text(
-                          "References",
-                          style: TextStyle(fontSize: 25),
-                        ),
-                        ListTile(
-                          title: Text("flute_music_player"),
-                          trailing: IconButton(
-                            icon: new Icon(FontAwesomeIcons.github,
-                                color: Colors.deepPurpleAccent, size: 25),
-                            onPressed: () =>
-                                launchUrl(
-                                    "https://github.com/iampawan/Flute-Music-Player"),
+                        Positioned(
+                          child: Image.asset(
+                            "images/kid.png", height: 250, width: 170,
+                            fit: BoxFit.fill,
                           ),
+                          right: 45.0,
+                          bottom: 0.0,
                         ),
-                        ListTile(
-                          title: Text("sqflite"),
-                          trailing: IconButton(
-                            icon: new Icon(FontAwesomeIcons.github,
-                                color: Colors.deepPurpleAccent, size: 25),
-                            onPressed: () =>
-                                launchUrl(
-                                    "https://github.com/tekartik/sqflite"),
-                          ),
-                        ),
-                        ListTile(
-                          title: Text("dynamic_theme"),
-                          trailing: IconButton(
-                            icon: new Icon(FontAwesomeIcons.github,
-                                color: Colors.deepPurpleAccent, size: 25),
-                            onPressed: () =>
-                                launchUrl(
-                                    "https://github.com/Norbert515/dynamic_theme"),
-                          ),
-                        ),
-                        ListTile(
-                          title: Text("floating_search_bar"),
-                          trailing: IconButton(
-                            icon: new Icon(FontAwesomeIcons.github,
-                                color: Colors.deepPurpleAccent, size: 25),
-                            onPressed: () =>
-                                launchUrl(
-                                    "https://github.com/AppleEducate/plugins/tree/master/packages/floating_search_bar"),
-                          ),
-                        ),
-                        ListTile(
-                          title: Text("scoped_model"),
-                          trailing: IconButton(
-                            icon: new Icon(FontAwesomeIcons.github,
-                                color: Colors.deepPurpleAccent, size: 25),
-                            onPressed: () =>
-                                launchUrl(
-                                    "https://github.com/brianegan/scoped_model"),
-                          ),
-                        ),
-                        ListTile(
-                          title: Text("font_awesome_flutter"),
-                          trailing: IconButton(
-                            icon: new Icon(FontAwesomeIcons.github,
-                                color: Colors.deepPurpleAccent, size: 25),
-                            onPressed: () =>
-                                launchUrl(
-                                    "https://github.com/brianegan/font_awesome_flutter"),
-                          ),
-                        )
+                        Column(
+                          children: <Widget>[
+                            Text(
+                              "References",
+                              style: TextStyle(fontSize: 25),
+                            ),
+                            ListTile(
+                              title: Text("flute_music_player"),
+                              trailing: IconButton(
+                                icon: new Icon(FontAwesomeIcons.github,
+                                    color: Colors.deepPurpleAccent, size: 25),
+                                onPressed: () =>
+                                    launchUrl(
+                                        "https://github.com/iampawan/Flute-Music-Player"),
+                              ),
+                            ),
+                            ListTile(
+                              title: Text("sqflite"),
+                              trailing: IconButton(
+                                icon: new Icon(FontAwesomeIcons.github,
+                                    color: Colors.deepPurpleAccent, size: 25),
+                                onPressed: () =>
+                                    launchUrl(
+                                        "https://github.com/tekartik/sqflite"),
+                              ),
+                            ),
+                            ListTile(
+                              title: Text("dynamic_theme"),
+                              trailing: IconButton(
+                                icon: new Icon(FontAwesomeIcons.github,
+                                    color: Colors.deepPurpleAccent, size: 25),
+                                onPressed: () =>
+                                    launchUrl(
+                                        "https://github.com/Norbert515/dynamic_theme"),
+                              ),
+                            ),
+                            ListTile(
+                              title: Text("floating_search_bar"),
+                              trailing: IconButton(
+                                icon: new Icon(FontAwesomeIcons.github,
+                                    color: Colors.deepPurpleAccent, size: 25),
+                                onPressed: () =>
+                                    launchUrl(
+                                        "https://github.com/AppleEducate/plugins/tree/master/packages/floating_search_bar"),
+                              ),
+                            ),
+                            ListTile(
+                              title: Text("scoped_model"),
+                              trailing: IconButton(
+                                icon: new Icon(FontAwesomeIcons.github,
+                                    color: Colors.deepPurpleAccent, size: 25),
+                                onPressed: () =>
+                                    launchUrl(
+                                        "https://github.com/brianegan/scoped_model"),
+                              ),
+                            ),
+                            ListTile(
+                              title: Text("font_awesome_flutter"),
+                              trailing: IconButton(
+                                icon: new Icon(FontAwesomeIcons.github,
+                                    color: Colors.deepPurpleAccent, size: 25),
+                                onPressed: () =>
+                                    launchUrl(
+                                        "https://github.com/brianegan/font_awesome_flutter"),
+                              ),
+                            )
 
+                          ],
+                        ),
                       ],
                     ),
                   ),

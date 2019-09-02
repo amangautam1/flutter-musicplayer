@@ -45,6 +45,7 @@ class _listSong extends State<ListSongs> {
       default:
         break;
     }
+    print(songs.length);
 
     setState(() {
       isLoading = false;
@@ -67,6 +68,27 @@ class _listSong extends State<ListSongs> {
     }
   }
 
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Add songs"),
+          content: new Text(
+              "To add songs to favourite, long press any song from All songs tab."),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Got it"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -77,7 +99,14 @@ class _listSong extends State<ListSongs> {
       //     : null,
         appBar: new AppBar(
                 title: getTitle(widget.mode),
+          actions: <Widget>[
+            widget.mode == 3 ? IconButton(
+              icon: Icon(Icons.add,), onPressed: () {
+              _showDialog();
+            },) : Container()
+          ],
         ),
+
         body: new Container(
           child: isLoading
               ? new Center(
@@ -85,11 +114,12 @@ class _listSong extends State<ListSongs> {
                 )
               : new ListView.builder(
             itemCount: songs.length == null ? 0 : songs.length,
-                  itemBuilder: (context, i) => new Column(
+            itemBuilder: (context, i) =>
+                Column(
                         children: <Widget>[
-                          /* new Divider(
+                          new Divider(
                             height: 8.0,
-                          ),*/
+                          ),
                           new ListTile(
                             leading: new Hero(
                               tag: songs[i].id,

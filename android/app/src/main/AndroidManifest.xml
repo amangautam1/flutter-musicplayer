@@ -20,6 +20,10 @@
             android:name="io.flutter.app.FlutterApplication"
             android:label="Music player"
             android:icon="@mipmap/ic_launcher">
+        <meta-data
+                android:name="com.google.android.gms.ads.APPLICATION_ID"
+                android:value="ca-app-pub-1268517211128422~7673583142"/>
+
 
         <activity
             android:name=".MainActivity"

@@ -5,6 +5,8 @@ import 'package:musicplayer/musichome.dart';
 import 'package:musicplayer/pages/NoMusicFound.dart';
 
 class SplashScreen extends StatefulWidget {
+
+
   @override
   State<StatefulWidget> createState() {
     return new SplashState();
@@ -23,6 +25,7 @@ class SplashState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return new Scaffold(
         backgroundColor: Colors.deepPurple,
         body: SafeArea(
@@ -107,4 +110,6 @@ class SplashState extends State<SplashScreen> {
       }
     }
   }
+
 }
+ 
