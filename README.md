@@ -11,27 +11,19 @@ Please <b>star</b> the repo up, if you like the work.
 
 # Features
 <li> Play local songs
-<li> Beautiful Home screen
-<li> Beautiful Now Playing
+<li> Beautiful screens
 <li> Sqlite database support
-<li> Search songs
-<li> Songs suggestions
-<li> Top tracks
-<li> Recent songs
-<li> Random song
-<li> Album view
-<li> Artist view
-<li> Playlist
-<li> Shuffle
-<li> Playing queue
-<li> Play/pause
-<li> Next/prev
-<li> Theme(dark/light)
-<li> Animations
-<li> Awesome font
-<li> landscape mode supported 
-<li> Add to favourites
-  
+<li> Search songs, Songs suggestions
+<li> Top tracks, Recent songs, Random song
+<li> Album view, Artist view
+<li> Playing queue, Shuffle, Add to favourites
+<li> Play/pause, Next/prev
+<li> Themes(dark/light), Custom font, Animations
+<li> landscape mode
+
+# Video
+Catch the demo in this video.<br>
+[![Watch the video](https://img.youtube.com/vi/EfB_0vKdSAE/hqdefault.jpg)](https://youtu.be/EfB_0vKdSAE)
 
   
 # Screenshots
@@ -51,7 +43,7 @@ Please <b>star</b> the repo up, if you like the work.
      Dark Home Screen
       </td>
     </tr>
-  <tr>
+<!--   <tr>
       <td>
       <img src="demo/album.png" height=400 width=250>
       Album
@@ -92,7 +84,7 @@ Please <b>star</b> the repo up, if you like the work.
       <img src="demo/landscape.png" height=250 width=400>
       Landscape mode
     </td>
-  </tr>
+  </tr> -->
   </table>
 
 # Plugins
@@ -129,4 +121,11 @@ SOFTWARE.
 
 For help getting started with Flutter, view our online
 [documentation](https://flutter.io/).
+
+## Donation
+If this project help you reduce time to develop, you can give me a cup of coffee :) 
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3GM7UXJDF3MDG)
+
+
 
