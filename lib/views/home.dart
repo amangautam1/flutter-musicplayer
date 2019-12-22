@@ -22,7 +22,7 @@ class Home extends StatefulWidget {
   }
 }
 
-class stateHome extends State<Home> {
+class stateHome extends State<Home> with AutomaticKeepAliveClientMixin{
   List<Song> albums, recents, songs;
   bool isLoading = true;
   Song last;
@@ -216,9 +216,10 @@ class stateHome extends State<Home> {
                             heroTag: "shuffle",
                             onPressed: () {
                               MyQueue.songs = songs;
+                              MyQueue.songs.shuffle();
                               Navigator.of(context).push(
                                   new MaterialPageRoute(builder: (context) {
-                                return new NowPlaying(widget.db, songs,
+                                return new NowPlaying(widget.db, MyQueue.songs,
                                     new Random().nextInt(songs.length), 0);
                               }));
                             },
@@ -502,4 +503,8 @@ class stateHome extends State<Home> {
   Song _top(model) {
     return model.top == null ? top : model.top;
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

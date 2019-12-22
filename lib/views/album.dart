@@ -13,7 +13,7 @@ class Album extends StatefulWidget {
   }
 }
 
-class _stateAlbum extends State<Album> {
+class _stateAlbum extends State<Album> with AutomaticKeepAliveClientMixin{
   List<Song> songs;
   var f;
   bool isLoading = true;
@@ -106,4 +106,8 @@ class _stateAlbum extends State<Album> {
                 childAspectRatio: 8.0 / 10.0,
               ));
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

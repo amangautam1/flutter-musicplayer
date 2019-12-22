@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class MusicHome extends StatefulWidget {
   }
 }
 
-class _musicState extends State<MusicHome> {
+class _musicState extends State<MusicHome>with SingleTickerProviderStateMixin<MusicHome> {
   int _selectedDrawerIndex = 0;
   List<Song> songs;
   String title = "Music player";
@@ -41,35 +42,23 @@ class _musicState extends State<MusicHome> {
   bool isLoading = true;
   Song last;
   Color color = Colors.deepPurple;
-
-
-  getDrawerItemWidget(int pos) {
-    switch (pos) {
-      case 0:
-        return new Home(db);
-      case 2:
-        return new Songs(db);
-      case 3:
-        return new Artists(db);
-      case 1:
-        return new Album(db);
-      case 4:
-        return new PlayList(db);
-      default:
-        return new Text("Error");
-    }
-  }
-
+ int currentIndex = 0;
+ final pageController = PageController();
+var pages;
+ 
   _onSelectItem(int index) {
-    setState(() => _selectedDrawerIndex = index);
-    getDrawerItemWidget(_selectedDrawerIndex);
-    title = widget.bottomItems[index].title;
+    setState(() => currentIndex = index);
+  //  getDrawerItemWidget(_selectedDrawerIndex);
+ 
+    
   }
 
   @override
   void initState() {
     super.initState();
     getLast();
+    pages=[Home(db),Artists(db),Songs(db), Album(db),PlayList(db)];
+
   }
 
 
@@ -111,7 +100,19 @@ class _musicState extends State<MusicHome> {
       songs = songs;
       isLoading = false;
     });
+
   }
+   void onTap(int index) {
+ pageController.jumpToPage(index);
+ title = widget.bottomItems[index].title;
+   }
+    void onPageChanged(int index) {
+ setState(() {
+  currentIndex = index;
+ });
+ title = widget.bottomItems[index].title;
+ }
+
 
   GlobalKey<ScaffoldState> scaffoldState = new GlobalKey();
   @override
@@ -132,7 +133,7 @@ class _musicState extends State<MusicHome> {
     return new WillPopScope(
       child: new Scaffold(
         key: scaffoldState,
-        appBar: _selectedDrawerIndex == 0
+        appBar: currentIndex == 0
             ? null
             : new AppBar(
                 title: new Text(title),
@@ -252,12 +253,17 @@ class _musicState extends State<MusicHome> {
               )
             : Padding(
           padding: EdgeInsets.only(bottom: 0),
-          child: getDrawerItemWidget(_selectedDrawerIndex),
-        ),
+          child: PageView(
+   controller: pageController,
+   children: pages,
+   onPageChanged: onPageChanged, //
+    physics: NeverScrollableScrollPhysics (), // 
+  )),
+      
         bottomNavigationBar: BottomNavigationBar(
           items: bottomOptions,
-          onTap: (index) => _onSelectItem(index),
-          currentIndex: _selectedDrawerIndex,
+          onTap: onTap,
+          currentIndex: currentIndex,
         ),
 
 
@@ -267,34 +273,23 @@ class _musicState extends State<MusicHome> {
   }
 
   Future<bool> _onWillPop() {
-    if (_selectedDrawerIndex != 0) {
-      setState(() {
-        _selectedDrawerIndex = 0;
-      });
-    } else
-      return showDialog(
-            context: context,
-            child: new AlertDialog(
-              title: new Text('Are you sure?'),
-              content: new Text('music player will be stopped..'),
-              actions: <Widget>[
-                new FlatButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: new Text(
-                    'No',
-                  ),
-                ),
-                new FlatButton(
-                  onPressed: () {
-                    MyQueue.player.stop();
-                    SystemNavigator.pop();
-                  },
-                  child: new Text('Yes'),
-                ),
-              ],
-            ),
-          ) ??
-          false;
+    if (currentIndex != 0) {
+            onTap(0);
+    } else {
+         if (Platform.isAndroid) {
+          if (Navigator.of(context).canPop()) {
+            return Future.value(true);
+          } else {
+              const platform = const MethodChannel('android_app_retain');
+            platform.invokeMethod("sendToBackground");
+            return Future.value(false);
+          }
+        } else {
+          return Future.value(true);
+        }
+    }
+
+     
   }
 
 

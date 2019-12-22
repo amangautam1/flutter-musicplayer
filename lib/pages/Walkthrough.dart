@@ -77,8 +77,8 @@ class SplashState extends State<SplashScreen> {
     var db = new DatabaseClient();
     await db.create();
     if (await db.alreadyLoaded()) {
-      Navigator.of(context).pop();
-      Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+     // Navigator.of(context).pop();
+      Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) {
         return new MusicHome();
       }));
     } else {
@@ -89,8 +89,8 @@ class SplashState extends State<SplashScreen> {
 
         if (list == null || list.length == 0) {
           print("List-> $list");
-          Navigator.of(context).pop(true);
-          Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+         
+          Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) {
             return new NoMusicFound();
           }));
         }
@@ -100,8 +100,8 @@ class SplashState extends State<SplashScreen> {
           if (!mounted) {
             return;
           }
-          Navigator.of(context).pop(true);
-          Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+        
+          Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) {
             return new MusicHome();
           }));
         }

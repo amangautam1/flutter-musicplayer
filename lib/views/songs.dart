@@ -17,7 +17,7 @@ class Songs extends StatefulWidget {
   }
 }
 
-class _songsState extends State<Songs> {
+class _songsState extends State<Songs> with AutomaticKeepAliveClientMixin {
   List<Song> songs;
   bool isLoading = true;
 
@@ -144,4 +144,8 @@ class _songsState extends State<Songs> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

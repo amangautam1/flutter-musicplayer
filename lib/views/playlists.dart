@@ -14,7 +14,7 @@ class PlayList extends StatefulWidget {
   }
 }
 
-class _statePlaylist extends State<PlayList> {
+class _statePlaylist extends State<PlayList> with AutomaticKeepAliveClientMixin {
   var mode;
   var selected;
   Orientation orientation;
@@ -151,4 +151,8 @@ class _statePlaylist extends State<PlayList> {
       ],
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
