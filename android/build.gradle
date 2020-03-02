@@ -5,8 +5,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath 'com.google.gms:google-services:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.6.1'
+        classpath 'com.google.gms:google-services:4.3.3'
     }
 }
 
@@ -30,13 +30,13 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-   subprojects {
-  project.configurations.all {
-     resolutionStrategy.eachDependency { details ->
-        if (details.requested.group == 'com.android.support'
-              && !details.requested.name.contains('multidex') ) {
-           details.useVersion "27.1.0"
+subprojects {
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                    && !details.requested.name.contains('multidex')) {
+                details.useVersion "29.0.2"
+            }
         }
-     }
-  }
+    }
 }
